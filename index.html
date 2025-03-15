@@ -23,37 +23,20 @@
             position: relative;
             width: 100%;
             height: 100vh;
-            min-height: 800px;
             background: url('https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/image.png') 
                         no-repeat center center;
-            background-size: contain; /* 이미지가 너무 확대되지 않도록 */
-            background-attachment: fixed;
+            background-size: cover; /* 배경화면 꽉 차게 조정 */
+            background-attachment: fixed; /* 고정 배경 */
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end; /* 박스를 화면 하단으로 배치 */
-            padding-bottom: 120px; /* 여백 추가 */
+            align-items: center; /* 세로 중앙 정렬 */
+            justify-content: center; /* 가로 중앙 정렬 */
             overflow: hidden;
-        }
-
-        /* 배경 위 흐림 효과 */
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3); /* 어두운 투명 레이어 */
-            backdrop-filter: blur(6px); /* 흐림 효과 */
-            z-index: 1;
         }
 
         /* 중앙 컨테이너 */
         .container {
             background: rgba(255, 255, 255, 0.9); /* 반투명 박스 */
             position: relative;
-            z-index: 2;
             padding: 30px;
             border-radius: 12px;
             text-align: center;
