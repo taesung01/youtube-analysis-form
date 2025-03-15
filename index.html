@@ -26,25 +26,19 @@
             justify-content: center;
             position: relative;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 35px 40px;
-            border-radius: 12px;
-            text-align: center;
-            width: 85%;
-            max-width: 750px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .hero .container {
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 35px 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 85%;
+    max-width: 750px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     position: absolute;
-    top: 50%;
+    top: calc(50% + 190px); /* 5cm (190px) 만큼 내리기 */
     left: 50%;
-    transform: translate(-50%, 190px); /* 5cm만큼 내려주기 (190px) */
-        }
+    transform: translateX(-50%);
+}
         .logo-container {
             display: flex;
             align-items: center;
