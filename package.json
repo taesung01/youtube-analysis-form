@@ -1,0 +1,8 @@
+{
+  "name": "youtube-gdrive-connector",
+  "version": "1.0.0",
+  "description": "YouTube ID to Google Drive connector",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
