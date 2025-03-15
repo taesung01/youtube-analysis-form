@@ -5,115 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[고객경험DX팀] YouTube 동영상 분석 Agent</title>
   <style>
-    body, html {
+    /* 전체 배경 설정 */
+    body {
       margin: 0;
       padding: 0;
-      width: 100%;
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background: #f7f7f7;
-    }
-    .hero {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      background: linear-gradient(45deg, #ececec, #ffffff);
       display: flex;
-      justify-content: center;
       align-items: center;
-      overflow: hidden;
+      justify-content: center;
+      height: 100vh;
+      background: url('image.png') no-repeat center center/cover;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('background-image.jpg'); /* 실제 이미지 파일 경로로 교체하세요 */
-      background-size: cover;
-      background-position: center;
-      opacity: 0.2;
-      filter: blur(8px);
-      z-index: 1;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      color: #333;
-      padding: 20px;
-    }
+
+    /* 반투명 컨테이너 */
     .container {
-      background-color: #ffffff;
-      padding: 40px;
+      background: rgba(0, 0, 0, 0.7);  /* 반투명 배경 */
+      padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      color: white;
       width: 90%;
-      max-width: 700px;
-      margin: 0 auto;
+      max-width: 600px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+
+    /* 제목 스타일 */
     .main-title {
-      font-size: 32px;
-      color: #333333;
+      font-size: 28px;
+      font-weight: bold;
       margin-bottom: 20px;
     }
+
+    /* 입력 필드 스타일 */
     .label-input {
-      font-size: 20px;
-      color: #555555;
+      font-size: 18px;
       margin-bottom: 8px;
-      text-align: left;
     }
+
     input[type="text"] {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 16px;
       margin-bottom: 20px;
       box-sizing: border-box;
     }
-    input::placeholder {
-      white-space: pre-line;
-      color: #999999;
-    }
+
+    /* 버튼 스타일 */
     button {
       width: 100%;
       padding: 14px;
-      background-color: #0070f3;
-      color: #ffffff;
+      background-color: #ff0000; /* YouTube 레드 */
+      color: white;
       border: none;
       border-radius: 6px;
       font-size: 18px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
+
     button:hover {
-      background-color: #005bb5;
+      background-color: #cc0000;
     }
+
+    /* 푸터 스타일 */
     .footer {
       text-align: center;
       font-size: 14px;
-      color: #777777;
       margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <div class="hero-content">
-      <div class="container">
-        <div class="main-title">[고객경험DX팀] YouTube 동영상 분석 Agent</div>
-        <form method="POST" action="http://localhost:5678/webhook-test/video">
-          <div class="label-input">유튜브 비디오ID 입력</div>
-          <input type="text" id="videoId" name="videoId" required 
-                 placeholder="예: https://www.youtube.com/watch?v=S-ZbAP4WkWE&#10;에서 S-ZbAP4WkWE&#10;부분입니다">
-          <button type="submit">전송</button>
-        </form>
-        <div class="footer">
-          <p>분석 요청 후 결과가 이메일로 전송됩니다.</p>
-        </div>
-      </div>
+  <div class="container">
+    <div class="main-title">[고객경험DX팀] YouTube 동영상 분석 Agent</div>
+    <form method="POST" action="http://localhost:5678/webhook-test/video">
+      <div class="label-input">유튜브 비디오ID 입력</div>
+      <input type="text" id="videoId" name="videoId" required 
+             placeholder="예: https://www.youtube.com/watch?v=S-ZbAP4WkWE&#10;에서 S-ZbAP4WkWE&#10;부분입니다">
+      <button type="submit">전송</button>
+    </form>
+    <div class="footer">
+      <p>분석 요청 후 결과가 이메일로 전송됩니다.</p>
     </div>
   </div>
 </body>
