@@ -15,17 +15,18 @@
             height: 100%;
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
-        .hero {
-            width: 100%;
-            min-height: 100vh;
-            background: url('https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/image.png') no-repeat center center;
-            background-size: contain;
-            background-color: #660000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+.hero {
+    width: 100%;
+    min-height: 100vh;
+    background: url('https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/image.png') no-repeat center center;
+    background-size: contain;
+    background-color: #660000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
 .container {
     background: rgba(255, 255, 255, 0.95);
     padding: 35px 40px;
@@ -35,9 +36,9 @@
     max-width: 750px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     position: absolute;
-    top: calc(50% + 190px); /* 5cm (190px) 만큼 내리기 */
+    top: 50%;  /* 50% 위치 설정 */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, calc(-50% + 190px)); /* 50% + 5cm(190px) 내리기 */
 }
         .logo-container {
             display: flex;
