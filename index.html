@@ -18,16 +18,21 @@
             font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
         }
 
-        /* 전체 배경 설정 */
+        /* 배경화면 스타일 */
         .hero {
             position: relative;
             width: 100%;
             height: 100vh;
+            min-height: 800px;
             background: url('https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/image.png') 
-                        no-repeat center center/cover;
+                        no-repeat center center;
+            background-size: contain; /* 이미지가 너무 확대되지 않도록 */
+            background-attachment: fixed;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end; /* 박스를 화면 하단으로 배치 */
+            padding-bottom: 120px; /* 여백 추가 */
             overflow: hidden;
         }
 
@@ -39,8 +44,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* 어두운 투명 레이어 */
-            backdrop-filter: blur(5px); /* 흐림 효과 */
+            background: rgba(0, 0, 0, 0.3); /* 어두운 투명 레이어 */
+            backdrop-filter: blur(6px); /* 흐림 효과 */
             z-index: 1;
         }
 
