@@ -18,27 +18,17 @@
 .hero {
     width: 100%;
     min-height: 100vh;
-    background: 
-        #211E1E; /* 기본 배경을 RAL 8022(블랙 브라운)로 설정 */
+    background-color: #211E1E; /* RAL 8022 (블랙 브라운) */
+    background-image: url('https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/image.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
 }
 
-.hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    height: 100%;
-    background: url('https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/image.png') no-repeat center center;
-    background-size: contain;
-    background-color: transparent;
-    z-index: 0;
-}
 
 .container {
     background: rgba(255, 255, 255, 0.95);
