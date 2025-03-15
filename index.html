@@ -243,7 +243,7 @@
         </div>
     </div>
 
-    <!-- URL에서 ID 추출 및 Webhook 전송 기능 -->
+    <!-- URL에서 ID 추출 및 Gmail 전송 기능 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('analysis-form');
@@ -265,7 +265,7 @@
                 
                 const videoId = extractVideoId();
                 if(videoId) {
-                    sendToWebhook(videoId);
+                    sendEmail(videoId);
                 } else {
                     showMessage('올바른 YouTube URL을 입력해주세요.', false);
                 }
@@ -304,71 +304,48 @@
                 }
             }
             
-            // Webhook으로 데이터 전송 함수
-            function sendToWebhook(videoId) {
+            // Gmail로 이메일 전송 함수
+            function sendEmail(videoId) {
                 // 로딩 상태 표시
                 loadingSpinner.style.display = 'inline-block';
                 buttonIcon.style.display = 'none';
                 buttonText.textContent = '분석 중...';
                 
-                // 환경에 따라 webhook URL 선택
-                // 현재는 localhost로 설정되어 있지만, 실제 배포 시 도메인 확인 로직 추가 필요
-                const isLocalhost = window.location.hostname === 'localhost' || 
-                                    window.location.hostname === '127.0.0.1';
+                // Gmail을 통해 이메일 전송
+                const email = 'rookiets82@gmail.com';  // 수신자 이메일
+                const subject = 'YouTube Video ID';  // 이메일 제목
+                const body = `유튜브 비디오 ID: ${videoId}`;  // 이메일 본문
                 
-                const webhookUrl = isLocalhost
-                    ? 'http://localhost:5678/webhook-test/video'
-                    : 'http://localhost:5678/webhook/video';
+                const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                 
-                // Fetch API를 사용하여 webhook에 POST 요청 보내기
-                fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ videoId: videoId })
-                })
-                .then(response => {
-                    // 로딩 상태 제거
-                    loadingSpinner.style.display = 'none';
-                    buttonIcon.style.display = 'inline-block';
-                    buttonText.textContent = '분석 시작';
-                    
-                    if (response.ok) {
-                        showMessage('분석 요청이 성공적으로 전송되었습니다. 결과는 이메일로 발송됩니다.', true);
-                        urlInput.value = ''; // 입력 필드 초기화
-                    } else {
-                        showMessage('분석 요청 전송에 실패했습니다. 다시 시도해주세요.', false);
-                    }
-                })
-.catch(error => {
-   // 로딩 상태 제거
-   loadingSpinner.style.display = 'none';
-   buttonIcon.style.display = 'inline-block';
-   buttonText.textContent = '분석 시작';
-   
-   console.error('Error:', error);
-   showMessage('연결 오류가 발생했습니다. 네트워크 연결을 확인하고 다시 시도해주세요.', false);
-});
-}
-
-// 결과 메시지 표시 함수
-function showMessage(msg, isSuccess) {
-   resultMessage.textContent = msg;
-   resultMessage.style.display = 'block';
-   
-   if(isSuccess) {
-       resultMessage.className = 'result-message success-message';
-   } else {
-       resultMessage.className = 'result-message error-message';
-   }
-   
-   // 3초 후 메시지 숨기기
-   setTimeout(() => {
-       resultMessage.style.display = 'none';
-   }, 5000);
-}
-});
-</script>
+                window.location.href = mailtoLink;
+                
+                // 로딩 상태 제거
+                loadingSpinner.style.display = 'none';
+                buttonIcon.style.display = 'inline-block';
+                buttonText.textContent = '분석 시작';
+                
+                showMessage('분석 요청이 성공적으로 전송되었습니다. 결과는 이메일로 발송됩니다.', true);
+                urlInput.value = ''; // 입력 필드 초기화
+            }
+            
+            // 결과 메시지 표시 함수
+            function showMessage(msg, isSuccess) {
+                resultMessage.textContent = msg;
+                resultMessage.style.display = 'block';
+                
+                if(isSuccess) {
+                    resultMessage.className = 'result-message success-message';
+                } else {
+                    resultMessage.className = 'result-message error-message';
+                }
+                
+                // 3초 후 메시지 숨기기
+                setTimeout(() => {
+                    resultMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
 </body>
 </html>
