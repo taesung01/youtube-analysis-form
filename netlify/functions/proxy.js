@@ -49,7 +49,7 @@ exports.handler = async function(event) {
     }
     
     // 새로 배포된 Google Apps Script 웹 앱 URL
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbxctuXRhDLc7yr1-2WODd5pr17gJXvv3hPJY7OG66T26ybxQwkB9_5UjUSIiPDV23D4/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbzwQ2tsj1_QfHpVS0eUDdFjfY_NCuzT6_-nDDgOGORVACbUF7RLg2m-BcdwJ0OkuwLv/exec';
     
     try {
       // Google Apps Script에 요청 전송
