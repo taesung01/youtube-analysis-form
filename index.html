@@ -29,19 +29,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding-bottom: 0; /* 컨테이너 위치는 transform으로 조정 */
+            position: relative;
         }
         
         /* 중앙 컨테이너 - 크기와 위치 조정 */
         .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 45px 50px; /* 내부 패딩 상하좌우 모두 증가 */
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.95); /* 투명도 약간 감소 */
+            padding: 35px 40px; /* 내부 패딩 조정 */
+            border-radius: 12px;
             text-align: center;
-            width: 95%; /* 너비 증가 */
-            max-width: 850px; /* 최대 너비 증가 */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transform: translateY(12vh); /* 화면 높이의 12%로 조정 - 원래 20%에서 위로 올림 */
+            width: 85%; /* 폼 너비 조정 */
+            max-width: 750px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); /* 그림자 강화 */
+            position: absolute;
+            top: 50%; /* 배경 네모 박스 중앙에 위치하도록 조정 */
+            left: 50%;
+            transform: translate(-50%, -42%); /* 약간 위로 올려서 유튜브 로고 아래 위치하도록 */
         }
         
         /* 로고 컨테이너 */
@@ -52,20 +55,19 @@
             margin-bottom: 25px;
         }
         
-        /* 분석 아이콘 스타일 */
+        /* 분석 아이콘 스타일 - 새로운 아이콘 */
         .analysis-icon {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             margin-right: 15px;
             fill: #FF0000;
         }
         
         /* 제목 스타일 */
         .main-title {
-            font-size: 28px; /* 폰트 크기 증가 */
+            font-size: 24px; /* 폰트 크기 약간 조정 */
             font-weight: bold;
             color: #222;
-            margin-bottom: 30px; /* 여백 증가 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -73,21 +75,36 @@
         
         /* 입력 필드 스타일 */
         .label-input {
-            font-size: 18px; /* 폰트 크기 증가 */
+            font-size: 17px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: left;
+        }
+        
+        .input-example {
+            font-size: 13px;
+            color: #666;
+            text-align: left;
+            margin-bottom: 10px;
+            font-style: italic;
         }
         
         input[type="text"] {
             width: 100%;
-            padding: 16px; /* 패딩 증가 */
+            padding: 14px;
             border: 1px solid #ccc;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             box-sizing: border-box;
-            margin-bottom: 20px; /* 여백 증가 */
+            margin-bottom: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #FF0000;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+            outline: none;
         }
         
         input::placeholder {
@@ -97,37 +114,51 @@
         /* 버튼 스타일 */
         button {
             width: 100%;
-            padding: 18px; /* 패딩 증가 */
+            padding: 16px;
             background-color: #ff0000; /* YouTube 레드 */
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 20px; /* 폰트 크기 증가 */
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 10px;
+            margin-top: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         button:hover {
-            background-color: #cc0000;
+            background-color: #e60000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         /* 버튼 내부 아이콘 */
         .button-icon {
             margin-right: 10px;
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
         }
         
         /* 푸터 스타일 */
         .footer {
             text-align: center;
-            font-size: 16px; /* 폰트 크기 증가 */
-            color: #444;
-            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        /* 숨겨진 입력 필드 */
+        .hidden-input {
+            display: none;
         }
     </style>
 </head>
@@ -135,21 +166,31 @@
     <div class="hero">
         <div class="container">
             <div class="logo-container">
-                <!-- 새로운 데이터 분석 아이콘으로 변경 -->
+                <!-- 차트와 동영상을 결합한 새로운 아이콘 -->
                 <svg class="analysis-icon" viewBox="0 0 24 24">
-                    <path d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"/>
-                    <circle cx="12" cy="9" r="1"/>
-                    <circle cx="6" cy="15" r="1"/>
-                    <circle cx="18" cy="15" r="1"/>
+                    <path d="M4,4h16c1.1,0,2,0.9,2,2v12c0,1.1-0.9,2-2,2H4c-1.1,0-2-0.9-2-2V6C2,4.9,2.9,4,4,4z" fill="#FF0000" opacity="0.8"/>
+                    <path d="M10,9l5,3l-5,3V9z" fill="white"/>
+                    <!-- 차트 라인 -->
+                    <path d="M5,15.5L7,14l2,1l3-3l2,2" stroke="white" stroke-width="1.5" fill="none"/>
+                    <circle cx="5" cy="15.5" r="1" fill="white"/>
+                    <circle cx="7" cy="14" r="1" fill="white"/>
+                    <circle cx="9" cy="15" r="1" fill="white"/>
+                    <circle cx="12" cy="12" r="1" fill="white"/>
+                    <circle cx="14" cy="14" r="1" fill="white"/>
                 </svg>
                 <div class="main-title">
                     [고객경험DX팀] YouTube 동영상 분석 Agent
                 </div>
             </div>
-            <form method="POST" action="http://localhost:5678/webhook-test/video">
-                <div class="label-input">유튜브 비디오 ID 입력</div>
-                <input type="text" id="videoId" name="videoId" required 
-                       placeholder="예: https://www.youtube.com/watch?v=S-ZbAP4WkWE&#10;에서 S-ZbAP4WkWE&#10;부분입니다">
+            <form method="POST" action="http://localhost:5678/webhook-test/video" id="analysis-form">
+                <div class="label-input">유튜브 비디오 URL 입력</div>
+                <input type="text" id="videoUrl" name="videoUrl" required 
+                       placeholder="YouTube 동영상 URL을 입력하세요">
+                <div class="input-example">예: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
+                
+                <!-- 실제로 서버에 전송될 숨겨진 비디오 ID 필드 -->
+                <input type="hidden" id="videoId" name="videoId">
+                
                 <button type="submit">
                     <svg class="button-icon" viewBox="0 0 24 24" fill="white">
                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"></path>
@@ -162,5 +203,63 @@
             </div>
         </div>
     </div>
+
+    <!-- URL에서 ID 추출 기능 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('analysis-form');
+            const urlInput = document.getElementById('videoUrl');
+            const idInput = document.getElementById('videoId');
+            
+            // URL 입력 시 실시간으로 ID 추출
+            urlInput.addEventListener('input', function() {
+                extractVideoId();
+            });
+            
+            // 폼 제출 전 ID 추출 확인
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                if(extractVideoId()) {
+                    this.submit();
+                } else {
+                    alert('올바른 YouTube URL을 입력해주세요.');
+                }
+            });
+            
+            // 비디오 ID 추출 함수
+            function extractVideoId() {
+                const url = urlInput.value.trim();
+                let videoId = null;
+                
+                // 정규식 패턴으로 다양한 YouTube URL 형식 처리
+                const patterns = [
+                    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/i,  // 표준 URL
+                    /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^?]+)/i,              // 단축 URL
+                    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/i,    // 임베드 URL
+                    /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([^?]+)/i,        // 이전 임베드 URL
+                    /^([a-zA-Z0-9_-]{11})$/                                       // 직접 ID 입력
+                ];
+                
+                // 각 패턴 테스트
+                for(let pattern of patterns) {
+                    const match = url.match(pattern);
+                    if(match && match[1]) {
+                        videoId = match[1];
+                        break;
+                    }
+                }
+                
+                // 추출된 ID가 있으면 숨겨진 필드에 설정
+                if(videoId) {
+                    idInput.value = videoId;
+                    return true;
+                } else {
+                    idInput.value = '';
+                    return false;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
