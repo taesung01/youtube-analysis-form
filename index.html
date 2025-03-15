@@ -203,9 +203,11 @@
     <div class="hero">
         <div class="container">
             <div class="logo-container">
+                <!-- 차트와 동영상을 결합한 새로운 아이콘 -->
                 <svg class="analysis-icon" viewBox="0 0 24 24">
                     <path d="M4,4h16c1.1,0,2,0.9,2,2v12c0,1.1-0.9,2-2,2H4c-1.1,0-2-0.9-2-2V6C2,4.9,2.9,4,4,4z" fill="#FF0000" opacity="0.8"/>
                     <path d="M10,9l5,3l-5,3V9z" fill="white"/>
+                    <!-- 차트 라인 -->
                     <path d="M5,15.5L7,14l2,1l3-3l2,2" stroke="white" stroke-width="1.5" fill="none"/>
                     <circle cx="5" cy="15.5" r="1" fill="white"/>
                     <circle cx="7" cy="14" r="1" fill="white"/>
@@ -213,7 +215,7 @@
                     <circle cx="12" cy="12" r="1" fill="white"/>
                     <circle cx="14" cy="14" r="1" fill="white"/>
                 </svg>
-                <div class="main-title">
+               <div class="main-title">
                     [고객경험DX팀] YouTube 동영상 분석 Agent
                 </div>
             </div>
@@ -222,7 +224,9 @@
                 <input type="text" id="videoUrl" name="videoUrl" required 
                        placeholder="YouTube 동영상 URL을 입력하세요">
                 <div class="input-example">예: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
+                
                 <input type="hidden" id="videoId" name="videoId">
+                
                 <button type="submit" id="submit-button">
                     <div class="loading-spinner" id="loading-spinner"></div>
                     <svg class="button-icon" viewBox="0 0 24 24" fill="white" id="button-icon">
@@ -259,59 +263,51 @@
 
             showLoading(true);
 
-            // Google Apps Script URL로 비디오 ID를 전송
-            sendToWebhook(videoId);
-        });
-
-        // 결과 메시지 표시
-        function showMessage(message, type) {
-            const resultMessage = document.getElementById('result-message');
-            resultMessage.className = 'result-message ' + type;
-            resultMessage.textContent = message;
-            resultMessage.style.display = 'block';
-        }
-
-        // 로딩 스피너 표시
-        function showLoading(isLoading) {
-            const loadingSpinner = document.getElementById('loading-spinner');
-            const submitButton = document.getElementById('submit-button');
-            const buttonIcon = document.getElementById('button-icon');
-
-            if (isLoading) {
-                loadingSpinner.style.display = 'inline-block';
-                submitButton.disabled = true;
-                buttonIcon.style.display = 'none';
-            } else {
-                loadingSpinner.style.display = 'none';
-                submitButton.disabled = false;
-                buttonIcon.style.display = 'inline-block';
-            }
-        }
-
-        // Webhook으로 비디오 ID 전송
-        function sendToWebhook(videoId) {
-            const url = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';  // Google Apps Script URL
-
-            fetch(url, {
+            // Google Apps Script URL로 비디오 ID 전송
+            fetch('https://script.google.com/macros/s/AKfycbwrAgdEfq7gdzHLqAvAs2QAikKAcW3wJ5wfQUA-cJCTgN5cOBDLHa4vM-sQBYGdcl6a/exec', {
                 method: 'POST',
+                body: JSON.stringify({ videoId: videoId }),
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `videoId=${videoId}`
+                    'Content-Type': 'application/json'
+                }
             })
             .then(response => response.json())
             .then(data => {
                 showLoading(false);
                 if (data.success) {
-                    showMessage("분석이 완료되었습니다.", "success-message");
+                    showMessage("분석이 완료되었습니다! 이메일을 확인해 주세요.", "success-message");
                 } else {
-                    showMessage("분석 중 오류가 발생했습니다.", "error-message");
+                    showMessage("메일 전송에 실패했습니다.", "error-message");
                 }
             })
             .catch(error => {
                 showLoading(false);
-                showMessage("서버와의 연결에 실패했습니다.", "error-message");
+                showMessage("서버 오류가 발생했습니다.", "error-message");
             });
+        });
+
+        // 로딩 상태 표시 함수
+        function showLoading(isLoading) {
+            const spinner = document.getElementById('loading-spinner');
+            const button = document.getElementById('submit-button');
+            const icon = document.getElementById('button-icon');
+            if (isLoading) {
+                spinner.style.display = 'inline-block';
+                button.disabled = true;
+                icon.style.display = 'none';
+            } else {
+                spinner.style.display = 'none';
+                button.disabled = false;
+                icon.style.display = 'inline-block';
+            }
+        }
+
+        // 메시지 표시 함수
+        function showMessage(message, type) {
+            const resultMessage = document.getElementById('result-message');
+            resultMessage.textContent = message;
+            resultMessage.className = 'result-message ' + type;
+            resultMessage.style.display = 'block';
         }
     </script>
 </body>
