@@ -238,48 +238,49 @@
             }
         }
 
-        // 폼 제출 이벤트 핸들러
-        document.getElementById("analysis-form").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            
-            const videoUrl = document.getElementById("videoUrl").value;
-            const videoId = extractVideoId(videoUrl);
-            
-            if (!videoId) {
-                displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
-                return;
+// 폼 제출 이벤트 핸들러
+document.getElementById("analysis-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    
+    const videoUrl = document.getElementById("videoUrl").value;
+    const videoId = extractVideoId(videoUrl);
+    
+    if (!videoId) {
+        displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
+        return;
+    }
+
+    document.getElementById("videoId").value = videoId;
+
+    // 분석 시작 메시지 추가
+    displayResult("분석을 시작합니다. 요청하신 Youtube영상의 분석은 GPT가 담당하고, 5분 이내에 분석결과를 이메일로 전달드릴 예정입니다. 조금 기다려 주세요^^", "success");
+
+    document.getElementById("submit-button").disabled = true;
+    document.getElementById("loading-spinner").style.display = "inline-block";
+    document.getElementById("result").style.display = "none";
+    
+    try {
+        const proxyUrl = 'https://darling-pony-992b5b.netlify.app/.netlify/functions/proxy';
+        const response = await fetch(`${proxyUrl}?videoId=${encodeURIComponent(videoId)}`);
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                // 분석 완료 후 메시지 표시
+                displayResult("분석이 완료되었습니다. 결과는 이메일로 보내드릴 예정입니다.", "success");
+            } else {
+                displayResult(data.message || "알 수 없는 오류가 발생했습니다.", "error");
             }
-
-            document.getElementById("videoId").value = videoId;
-
-            // 분석 시작 메시지 추가
-            displayResult("분석을 시작합니다. 요청하신 Youtube영상의 분석은 GPT가 담당하고, 5분 이내에 분석결과를 이메일로 전달드릴 예정입니다. 조금 기다려 주세요^^", "success");
-
-            document.getElementById("submit-button").disabled = true;
-            document.getElementById("loading-spinner").style.display = "inline-block";
-            document.getElementById("result").style.display = "none";
-            
-            try {
-                const proxyUrl = 'https://darling-pony-992b5b.netlify.app/.netlify/functions/proxy';
-                const response = await fetch(`${proxyUrl}?videoId=${encodeURIComponent(videoId)}`);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        displayResult("분석을 시작합니다. 요청하신 Youtube영상의 분석은 GPT가 담당하고, 5분 이내에 분석결과를 이메일로 전달드릴 예정입니다. 조금 기다려 주세요^^ ", "success");
-                    } else {
-                        displayResult(data.message || "알 수 없는 오류가 발생했습니다.", "error");
-                    }
-                } else {
-                    displayResult("서버와의 연결에 실패했습니다.", "error");
-                }
-            } catch (error) {
-                displayResult("알 수 없는 오류가 발생했습니다.", "error");
-            } finally {
-                document.getElementById("submit-button").disabled = false;
-                document.getElementById("loading-spinner").style.display = "none";
-            }
-        });
+        } else {
+            displayResult("서버와의 연결에 실패했습니다.", "error");
+        }
+    } catch (error) {
+        displayResult("알 수 없는 오류가 발생했습니다.", "error");
+    } finally {
+        document.getElementById("submit-button").disabled = false;
+        document.getElementById("loading-spinner").style.display = "none";
+    }
+});
     </script>
 </body>
 </html>
