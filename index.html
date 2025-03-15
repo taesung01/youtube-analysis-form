@@ -230,88 +230,67 @@
                 <button type="submit" id="submit-button">
                     <div class="loading-spinner" id="loading-spinner"></div>
                     <svg class="button-icon" viewBox="0 0 24 24" fill="white" id="button-icon">
-                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 16c-2.49 0-4.5-1.5-4.5-3s2.01-3 4.5-3c2.49 0 4.5 1.5 4.5 3s-2.01 3-4.5 3z"/>
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM12 9c-.55 0-1 .45-1 1v1h2v-1c0-.55-.45-1-1-1z"></path>
                     </svg>
                     분석하기
                 </button>
             </form>
-            <div class="result-message" id="result-message"></div>
+            <div id="result" class="result-message"></div>
         </div>
     </div>
 
     <script>
-        // 수정된 extractVideoId 함수
-        function extractVideoId(url) {
-            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)([A-Za-z0-9_-]{11})|youtu\.be\/([A-Za-z0-9_-]{11})|youtube\.com\/v\/([A-Za-z0-9_-]{11}))/;
-            const match = url.match(regex);
-            return match ? match[1] || match[2] || match[3] : null;
-        }
-
-        // 폼 제출 시 비디오 ID 추출 후 이메일 전송
-        document.getElementById('analysis-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // 기본 폼 제출을 막음
-
-            const videoUrl = document.getElementById('videoUrl').value;
+        document.getElementById("analysis-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const videoUrl = document.getElementById("videoUrl").value;
             const videoId = extractVideoId(videoUrl);
-
+            
             if (!videoId) {
-                showMessage("유효하지 않은 URL입니다.", "error-message");
+                displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
                 return;
             }
 
-            document.getElementById('videoId').value = videoId;  // 숨겨진 입력 필드에 비디오 ID 설정
-
-            showLoading(true);
-
-            // 전송할 데이터 점검 (콘솔에 출력)
-            const dataToSend = { videoId: videoId };
-            console.log("전송할 데이터:", dataToSend);  // 전송할 데이터 확인
-
-            // Google Apps Script URL로 비디오 ID 전송
-            fetch('https://script.google.com/macros/s/AKfycbwrAgdEfq7gdzHLqAvAs2QAikKAcW3wJ5wfQUA-cJCTgN5cOBDLHa4vM-sQBYGdcl6a/exec', {
-                method: 'POST',
-                body: JSON.stringify(dataToSend),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                showLoading(false);
+            document.getElementById("videoId").value = videoId;
+            document.getElementById("submit-button").disabled = true;
+            document.getElementById("loading-spinner").style.display = "inline-block";
+            
+            try {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbyF9y_ZceH4QTLzWsxmChpaQS5syty1m9q35YcX07Aw6PV5tc8y9J7odRVUCfGETQI/exec', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ videoId: videoId })
+                });
+                
+                const data = await response.json();
+                
                 if (data.success) {
-                    showMessage("분석이 완료되었습니다! 이메일을 확인해 주세요.", "success-message");
+                    displayResult("분석이 완료되었습니다.", "success");
                 } else {
-                    showMessage("메일 전송에 실패했습니다.", "error-message");
+                    displayResult("오류가 발생했습니다: " + data.message, "error");
                 }
-            })
-            .catch(error => {
-                showLoading(false);
-                showMessage("서버 오류가 발생했습니다.", "error-message");
-            });
+            } catch (error) {
+                console.error("Error during fetch:", error);
+                displayResult("서버 오류가 발생했습니다.", "error");
+            } finally {
+                document.getElementById("submit-button").disabled = false;
+                document.getElementById("loading-spinner").style.display = "none";
+            }
         });
 
-        // 로딩 상태 표시 함수
-        function showLoading(isLoading) {
-            const spinner = document.getElementById('loading-spinner');
-            const button = document.getElementById('submit-button');
-            const icon = document.getElementById('button-icon');
-            if (isLoading) {
-                spinner.style.display = 'inline-block';
-                button.disabled = true;
-                icon.style.display = 'none';
-            } else {
-                spinner.style.display = 'none';
-                button.disabled = false;
-                icon.style.display = 'inline-block';
-            }
+        function extractVideoId(url) {
+            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:.*[?&]v=))([^"&?/\s]{11}))/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
         }
 
-        // 메시지 표시 함수
-        function showMessage(message, type) {
-            const resultMessage = document.getElementById('result-message');
-            resultMessage.textContent = message;
-            resultMessage.className = 'result-message ' + type;
-            resultMessage.style.display = 'block';
+        function displayResult(message, type) {
+            const resultDiv = document.getElementById("result");
+            resultDiv.style.display = "block";
+            resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
+            resultDiv.textContent = message;
         }
     </script>
 </body>
