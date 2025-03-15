@@ -49,9 +49,9 @@ exports.handler = async function(event) {
     }
     
     // Google Apps Script 웹 앱 URL (실제 배포 ID 사용)
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbzyeNOShZnxWqgN_QWauWdBMyAuNdcufjgqPoOQbXFaw7UBR4iAodMCSXuYLPrImSlK/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbzGKirU37J55XbNMbg9-IuVoRlmXV4NHHXcBVNRRLsGlzmJgrHemM1Pte1e6ICLd7ap/exec';
     
-    // Google Apps Script에 요청 전송
+    // Google Apps Script에 요청 전송 (GET 방식으로 변경)
     console.log('Google Apps Script에 요청 전송:', `${appsScriptUrl}?videoId=${encodeURIComponent(videoId)}`);
     const response = await fetch(`${appsScriptUrl}?videoId=${encodeURIComponent(videoId)}`);
     
