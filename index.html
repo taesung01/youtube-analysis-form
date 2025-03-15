@@ -215,7 +215,7 @@
                     <circle cx="12" cy="12" r="1" fill="white"/>
                     <circle cx="14" cy="14" r="1" fill="white"/>
                 </svg>
-                <div class="main-title">
+               <div class="main-title">
                     [고객경험DX팀] YouTube 동영상 분석 Agent
                 </div>
             </div>
@@ -225,7 +225,6 @@
                        placeholder="YouTube 동영상 URL을 입력하세요">
                 <div class="input-example">예: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
                 
-                <!-- 실제로 서버에 전송될 숨겨진 비디오 ID 필드 -->
                 <input type="hidden" id="videoId" name="videoId">
                 
                 <button type="submit" id="submit-button">
@@ -240,12 +239,12 @@
         </div>
     </div>
 
-     <script>
+    <script>
         // 수정된 extractVideoId 함수
         function extractVideoId(url) {
-            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)([A-Za-z0-9_-]{11})|youtu\.be\/([A-Za-z0-9_-]{11}))/;
+            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)([A-Za-z0-9_-]{11})|youtu\.be\/([A-Za-z0-9_-]{11})|youtube\.com\/v\/([A-Za-z0-9_-]{11}))/;
             const match = url.match(regex);
-            return match ? match[1] || match[2] : null;
+            return match ? match[1] || match[2] || match[3] : null;
         }
 
         // 폼 제출 시 비디오 ID 추출 후 이메일 전송
@@ -310,5 +309,7 @@
             }
         }
     </script>
+</body>
+</html>
 </body>
 </html>
