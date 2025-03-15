@@ -266,10 +266,7 @@ document.getElementById("analysis-form").addEventListener("submit", async functi
         if (response.ok) {
             const data = await response.json();
             if (data.success) {
-                // 분석 완료 후 메시지 표시
-                setTimeout(function() {
-                    displayResult("분석이 완료되었습니다. 결과는 이메일로 보내드릴 예정입니다.", "success");
-                }, 2000);  // 2초 지연 후 완료 메시지 표시
+                // 분석 완료 메시지 삭제
             } else {
                 displayResult(data.message || "알 수 없는 오류가 발생했습니다.", "error");
             }
