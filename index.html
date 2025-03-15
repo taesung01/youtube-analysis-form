@@ -240,7 +240,14 @@
         </div>
     </div>
 
-    <script>
+     <script>
+        // 수정된 extractVideoId 함수
+        function extractVideoId(url) {
+            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)([A-Za-z0-9_-]{11})|youtu\.be\/([A-Za-z0-9_-]{11}))/;
+            const match = url.match(regex);
+            return match ? match[1] || match[2] : null;
+        }
+
         // 폼 제출 시 비디오 ID 추출 후 이메일 전송
         document.getElementById('analysis-form').addEventListener('submit', function(event) {
             event.preventDefault(); // 기본 폼 제출을 막음
@@ -279,12 +286,6 @@
                 showMessage("서버 오류가 발생했습니다.", "error-message");
             });
         });
-
-        function extractVideoId(url) {
-            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/([A-Za-z0-9_-]{11}))|youtu\.be\/([A-Za-z0-9_-]{11}))/;
-            const match = url.match(regex);
-            return match ? match[1] || match[2] : null;
-        }
 
         function showMessage(message, className) {
             const messageBox = document.getElementById('result-message');
