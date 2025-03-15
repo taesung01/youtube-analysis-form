@@ -263,10 +263,14 @@
 
             showLoading(true);
 
+            // 전송할 데이터 점검 (콘솔에 출력)
+            const dataToSend = { videoId: videoId };
+            console.log("전송할 데이터:", dataToSend);  // 전송할 데이터 확인
+
             // Google Apps Script URL로 비디오 ID 전송
             fetch('https://script.google.com/macros/s/AKfycbwrAgdEfq7gdzHLqAvAs2QAikKAcW3wJ5wfQUA-cJCTgN5cOBDLHa4vM-sQBYGdcl6a/exec', {
                 method: 'POST',
-                body: JSON.stringify({ videoId: videoId }),
+                body: JSON.stringify(dataToSend),
                 headers: {
                     'Content-Type': 'application/json'
                 }
