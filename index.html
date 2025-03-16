@@ -260,21 +260,27 @@
         document.getElementById("loading-spinner").style.display = "inline-block";
         document.getElementById("result").style.display = "none";
         
+        // 디버깅: 전송할 데이터 출력
+        const requestData = { 
+            video_url: videoUrl,
+            videoId: videoId,
+            token: secretToken
+        };
+        console.log("Webhook으로 보내는 데이터:", requestData);
+
         try {
             const response = await fetch(webhookUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
-                    video_url: videoUrl,  // make.com에서 URL 전체를 받도록 설정
-                    videoId: videoId,     // 비디오 ID도 함께 전송
-                    token: secretToken    // 보안을 위한 토큰
-                })
+                body: JSON.stringify(requestData)
             });
             
             if (response.ok) {
                 displayResult("분석 요청이 완료되었습니다. 5분 이내에 결과를 이메일로 받으실 수 있습니다. 조금만 기다려 주세요^^", "success");
             } else {
-                displayResult("분석 요청에 실패했습니다: " + response.status, "error");
+                // 추가 디버깅: 응답 본문 출력
+                const errorText = await response.text();
+                displayResult("분석 요청에 실패했습니다: " + response.status + " - " + errorText, "error");
             }
         } catch (error) {
             displayResult("오류가 발생했습니다: " + error.message, "error");
