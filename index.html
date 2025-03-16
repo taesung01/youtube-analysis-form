@@ -250,9 +250,10 @@
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "bypass-tunnel-reminder": "true" // 경고 페이지 우회
+                    "bypass-tunnel-reminder": "true"
                 },
-                body: JSON.stringify({ videoId })
+                body: JSON.stringify({ videoId }),
+                mode: "cors" // 기본값, 필요 시 no-cors로 변경
             });
             
             if (response.ok) {
