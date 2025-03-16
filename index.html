@@ -202,72 +202,79 @@
         </div>
     </div>
 
-<script>
-    function extractVideoId(url) {
-        if (!url) return null;
-        
-        const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:.*[?&]v=))([^"&?/\s]{11}))/;
-        let match = url.match(regex);
-        if (!match) {
-            const altRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^?&\/]{11})/;
-            match = url.match(altRegex);
-        }
-        return match ? match[1] : null;
-    }
-
-    function displayResult(message, type) {
-        const resultDiv = document.getElementById("result");
-        resultDiv.style.display = "block";
-        resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
-        resultDiv.textContent = message;
-        
-        if (type === "success") {
-            document.getElementById("videoUrl").value = "";
-            if (document.getElementById("videoId")) {
-                document.getElementById("videoId").value = "";
-            }
-        }
-    }
-
-    document.getElementById("analysis-form").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        
-        const videoUrl = document.getElementById("videoUrl").value;
-        const videoId = extractVideoId(videoUrl);
-        
-        if (!videoId) {
-            displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
-            return;
-        }
-
-        document.getElementById("videoId").value = videoId;
-        document.getElementById("submit-button").disabled = true;
-        document.getElementById("loading-spinner").style.display = "inline-block";
-        document.getElementById("result").style.display = "none";
-        
-        try {
-            const response = await fetch("https://upset-buttons-lick.loca.lt/webhook/test-webhook", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "bypass-tunnel-reminder": "true"
-                },
-                body: JSON.stringify({ videoId }),
-                mode: "cors" // 기본값, 필요 시 no-cors로 변경
-            });
+    <script>
+        /**
+         * YouTube URL에서 비디오 ID를 추출하는 함수
+         * @param {string} url - YouTube 비디오 URL
+         * @returns {string|null} - 추출된 비디오 ID 또는 null
+         */
+        function extractVideoId(url) {
+            if (!url) return null;
             
-            if (response.ok) {
-                displayResult("분석 요청이 완료되었습니다. 5분 이내에 결과를 이메일로 받으실 수 있습니다. 조금만 기다려 주세요^^", "success");
-            } else {
-                displayResult("분석 요청에 실패했습니다: " + response.status, "error");
+            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:.*[?&]v=))([^"&?/\s]{11}))/;
+            let match = url.match(regex);
+            if (!match) {
+                const altRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^?&\/]{11})/;
+                match = url.match(altRegex);
             }
-        } catch (error) {
-            displayResult("오류가 발생했습니다: " + error.message, "error");
-        } finally {
-            document.getElementById("submit-button").disabled = false;
-            document.getElementById("loading-spinner").style.display = "none";
+            return match ? match[1] : null;
         }
-    });
-</script>
+
+        /**
+         * 결과 메시지를 화면에 표시하는 함수
+         * @param {string} message - 표시할 메시지
+         * @param {string} type - 메시지 타입 (success 또는 error)
+         */
+        function displayResult(message, type) {
+            const resultDiv = document.getElementById("result");
+            resultDiv.style.display = "block";
+            resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
+            resultDiv.textContent = message;
+            
+            if (type === "success") {
+                document.getElementById("videoUrl").value = "";
+                if (document.getElementById("videoId")) {
+                    document.getElementById("videoId").value = "";
+                }
+            }
+        }
+
+        // 폼 제출 이벤트 핸들러
+        document.getElementById("analysis-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const videoUrl = document.getElementById("videoUrl").value;
+            const videoId = extractVideoId(videoUrl);
+            
+            if (!videoId) {
+                displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
+                return;
+            }
+
+            document.getElementById("videoId").value = videoId;
+            document.getElementById("submit-button").disabled = true;
+            document.getElementById("loading-spinner").style.display = "inline-block";
+            document.getElementById("result").style.display = "none";
+            
+            try {
+                const response = await fetch("https://orange-cities-cut.loca.lt/webhook/test-webhook", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ videoId })
+                });
+                
+                if (response.ok) {
+                    displayResult("분석 요청이 완료되었습니다. 5분 이내에 결과를 이메일로 받으실 수 있습니다. 조금만 기다려 주세요^^", "success");
+                } else {
+                    displayResult("분석 요청에 실패했습니다: " + response.status, "error");
+                }
+            } catch (error) {
+                displayResult("오류가 발생했습니다: " + error.message, "error");
+            } finally {
+                document.getElementById("submit-button").disabled = false;
+                document.getElementById("loading-spinner").style.display = "none";
+            }
+        });
+    </script>
 </body>
 </html>
