@@ -203,14 +203,8 @@
     </div>
 
 <script>
-    /**
-     * YouTube URL에서 비디오 ID를 추출하는 함수
-     * @param {string} url - YouTube 비디오 URL
-     * @returns {string|null} - 추출된 비디오 ID 또는 null
-     */
     function extractVideoId(url) {
         if (!url) return null;
-        
         const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:.*[?&]v=))([^"&?/\s]{11}))/;
         let match = url.match(regex);
         if (!match) {
@@ -220,17 +214,11 @@
         return match ? match[1] : null;
     }
 
-    /**
-     * 결과 메시지를 화면에 표시하는 함수
-     * @param {string} message - 표시할 메시지
-     * @param {string} type - 메시지 타입 (success 또는 error)
-     */
     function displayResult(message, type) {
         const resultDiv = document.getElementById("result");
         resultDiv.style.display = "block";
         resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
         resultDiv.textContent = message;
-        
         if (type === "success") {
             document.getElementById("videoUrl").value = "";
             if (document.getElementById("videoId")) {
@@ -239,19 +227,22 @@
         }
     }
 
-    // Webhook URL과 토큰 설정
     const webhookUrl = "https://hook.eu2.make.com/tg7fuuj2fm47kgoaipof4xpvxcyqp2iw";
-    const secretToken = "mysecretkey123"; // make.com 필터와 동일한 토큰으로 설정
+    const secretToken = "mysecretkey123";
+    let isSubmitting = false;
 
-    // 폼 제출 이벤트 핸들러
     document.getElementById("analysis-form").addEventListener("submit", async function(event) {
         event.preventDefault();
         
+        if (isSubmitting) return;
+        isSubmitting = true;
+
         const videoUrl = document.getElementById("videoUrl").value;
         const videoId = extractVideoId(videoUrl);
         
         if (!videoId) {
             displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
+            isSubmitting = false;
             return;
         }
 
@@ -260,7 +251,6 @@
         document.getElementById("loading-spinner").style.display = "inline-block";
         document.getElementById("result").style.display = "none";
         
-        // 디버깅: 전송할 데이터 출력
         const requestData = { 
             video_url: videoUrl,
             videoId: videoId,
@@ -272,13 +262,13 @@
             const response = await fetch(webhookUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestData)
+                body: JSON.stringify(requestData),
+                signal: AbortSignal.timeout(10000) // 10초 타임아웃
             });
             
             if (response.ok) {
-                displayResult("분석 요청이 완료되었습니다. 5분 이내에 결과를 이메일로 받으실 수 있습니다. 조금만 기다려 주세요^^", "success");
+                displayResult("분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다. 조금만 기다려 주세요^^", "success");
             } else {
-                // 추가 디버깅: 응답 본문 출력
                 const errorText = await response.text();
                 displayResult("분석 요청에 실패했습니다: " + response.status + " - " + errorText, "error");
             }
@@ -287,6 +277,7 @@
         } finally {
             document.getElementById("submit-button").disabled = false;
             document.getElementById("loading-spinner").style.display = "none";
+            isSubmitting = false;
         }
     });
 </script>
