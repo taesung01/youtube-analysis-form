@@ -75,7 +75,7 @@
             margin-bottom: 10px;
             font-style: italic;
         }
-        input[type="text"] {
+        input[type="text"], input[type="email"] {
             width: 100%;
             padding: 14px;
             border: 1px solid #ccc;
@@ -85,7 +85,7 @@
             margin-bottom: 8px;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
-        input[type="text"]:focus {
+        input[type="text"]:focus, input[type="email"]:focus {
             border-color: #FF0000;
             box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
             outline: none;
@@ -188,6 +188,10 @@
                 <input type="text" id="videoUrl" name="videoUrl" required placeholder="YouTube 동영상 URL을 입력하세요">
                 <div class="input-example">예: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
                 
+                <div class="label-input">이메일 주소 입력</div>
+                <input type="email" id="email" name="email" required placeholder="결과를 받을 이메일 주소를 입력하세요">
+                <div class="input-example">예: example@example.com</div>
+                
                 <input type="hidden" id="videoId" name="videoId">
                 
                 <button type="submit" id="submit-button">
@@ -227,7 +231,7 @@
         }
     }
 
-    const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
+    const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn"; // 실제 웹훅 URL
     const secretToken = "mysecretkey123";
     let isSubmitting = false;
 
@@ -239,6 +243,7 @@
 
         const videoUrl = document.getElementById("videoUrl").value;
         const videoId = extractVideoId(videoUrl);
+        const email = document.getElementById("email").value; // 이메일 정보 추가
         
         if (!videoId) {
             displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
@@ -250,10 +255,11 @@
         document.getElementById("submit-button").disabled = true;
         document.getElementById("loading-spinner").style.display = "inline-block";
         document.getElementById("result").style.display = "none";
-        
+
         const requestData = { 
             video_url: videoUrl,
             videoId: videoId,
+            email: email, // 이메일 정보 포함
             token: secretToken
         };
         console.log("Webhook으로 보내는 데이터:", requestData);
