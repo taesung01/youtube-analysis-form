@@ -93,6 +93,21 @@
         input::placeholder {
             color: #999;
         }
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        select:focus {
+            border-color: #FF0000;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+            outline: none;
+        }
         button {
             width: 100%;
             padding: 16px;
@@ -188,9 +203,30 @@
                 <input type="text" id="videoUrl" name="videoUrl" required placeholder="YouTube 동영상 URL을 입력하세요">
                 <div class="input-example">예: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
                 
-                <div class="label-input">이메일 주소 입력</div>
-                <input type="email" id="email" name="email" required placeholder="결과를 받을 이메일 주소를 입력하세요">
-                <div class="input-example">예: example@example.com</div>
+                <div class="label-input">이메일 주소 선택</div>
+                <select id="emailSelect" name="emailSelect" required>
+                    <option value="" disabled selected>팀원 이메일을 선택하세요</option>
+                    <option value="direct">직접 입력</option>
+                    <option value="changil.shin@lge.com">신창일 (changil.shin@lge.com)</option>
+                    <option value="jihye80.kim@lge.com">김지혜 (jihye80.kim@lge.com)</option>
+                    <option value="philsoo.kim@lge.com">김필수 (philsoo.kim@lge.com)</option>
+                    <option value="wade.kim@lge.com">김호연 (wade.kim@lge.com)</option>
+                    <option value="taesung01.lee@lge.com">이태성 (taesung01.lee@lge.com)</option>
+                    <option value="sean.chong@lge.com">정갑성 (sean.chong@lge.com)</option>
+                    <option value="hoyoung.chung@lge.com">정호영 (hoyoung.chung@lge.com)</option>
+                    <option value="sunghoon.cha@lge.com">차성훈 (sunghoon.cha@lge.com)</option>
+                    <option value="boram86.choi@lge.com">최보람 (boram86.choi@lge.com)</option>
+                    <option value="dahee3.kim@lge.com">김다희 (dahee3.kim@lge.com)</option>
+                </select>
+                <input type="email" id="emailDirect" name="email" placeholder="이메일 주소를 입력하세요" style="display: none;">
+                <div class="input-example">결과를 받을 팀원의 이메일을 선택하거나 직접 입력하세요</div>
+                
+                <div style="text-align: left; margin: 15px 0;">
+                    <label>
+                        <input type="checkbox" id="analyzeComments" name="analyzeComments">
+                        요청하신 영상의 전체 댓글 정밀 분석을 원하는 경우에는 체크를 눌러주세요
+                    </label>
+                </div>
                 
                 <input type="hidden" id="videoId" name="videoId">
                 
@@ -231,9 +267,23 @@
         }
     }
 
-    const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn"; // 실제 웹훅 URL
+    const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn"; // 기본 웹훅 URL
+    const commentsWebhookUrl = "https://script.google.com/macros/s/AKfycbyQjYtSdlw0YA1OGHM5RO5Ac24GnEk7L1bfjD9d-PSdO6Qf2-QyrJ9XJaCJqXYPxC95/exec"; // 댓글 분석 웹훅 URL
     const secretToken = "mysecretkey123";
     let isSubmitting = false;
+
+    // "직접 입력" 선택 시 입력 필드 표시
+    document.getElementById("emailSelect").addEventListener("change", function() {
+        const emailDirectInput = document.getElementById("emailDirect");
+        if (this.value === "direct") {
+            emailDirectInput.style.display = "block";
+            emailDirectInput.required = true;
+        } else {
+            emailDirectInput.style.display = "none";
+            emailDirectInput.required = false;
+            emailDirectInput.value = ""; // 입력 필드 초기화
+        }
+    });
 
     document.getElementById("analysis-form").addEventListener("submit", async function(event) {
         event.preventDefault();
@@ -243,10 +293,19 @@
 
         const videoUrl = document.getElementById("videoUrl").value;
         const videoId = extractVideoId(videoUrl);
-        const email = document.getElementById("email").value; // 이메일 정보 추가
-        
+        const emailSelect = document.getElementById("emailSelect").value;
+        const emailDirect = document.getElementById("emailDirect").value;
+        const analyzeComments = document.getElementById("analyzeComments").checked; // 체크박스 상태
+        let email = emailSelect === "direct" ? emailDirect : emailSelect;
+
         if (!videoId) {
             displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
+            isSubmitting = false;
+            return;
+        }
+
+        if (!email) {
+            displayResult("이메일 주소를 선택하거나 입력해 주세요.", "error");
             isSubmitting = false;
             return;
         }
@@ -256,13 +315,14 @@
         document.getElementById("loading-spinner").style.display = "inline-block";
         document.getElementById("result").style.display = "none";
 
+        // 기본 분석 요청 (Make.com)
         const requestData = { 
             video_url: videoUrl,
             videoId: videoId,
-            email: email, // 이메일 정보 포함
+            email: email,
             token: secretToken
         };
-        console.log("Webhook으로 보내는 데이터:", requestData);
+        console.log("Make.com으로 보내는 데이터:", requestData);
 
         try {
             const response = await fetch(webhookUrl, {
@@ -272,12 +332,44 @@
                 signal: AbortSignal.timeout(10000) // 10초 타임아웃
             });
             
-            if (response.ok) {
-                displayResult("분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다. 조금만 기다려 주세요^^", "success");
-            } else {
+            if (!response.ok) {
                 const errorText = await response.text();
-                displayResult("분석 요청에 실패했습니다: " + response.status + " - " + errorText, "error");
+                displayResult("기본 분석 요청에 실패했습니다: " + response.status + " - " + errorText, "error");
+                isSubmitting = false;
+                return;
             }
+
+            // 체크박스가 선택된 경우 댓글 분석 요청 (Google Apps Script)
+            if (analyzeComments) {
+                const commentsRequestData = {
+                    video_url: videoUrl,
+                    email: email
+                };
+                console.log("Google Apps Script로 보내는 데이터:", commentsRequestData);
+
+                const commentsResponse = await fetch(commentsWebhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(commentsRequestData),
+                    signal: AbortSignal.timeout(10000) // 10초 타임아웃
+                });
+
+                if (!commentsResponse.ok) {
+                    const errorText = await commentsResponse.text();
+                    displayResult("댓글 분석 요청에 실패했습니다: " + commentsResponse.status + " - " + errorText, "error");
+                    isSubmitting = false;
+                    return;
+                }
+            }
+
+            // 성공 메시지
+            let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
+            if (analyzeComments) {
+                successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
+            }
+            successMessage += " 조금만 기다려 주세요^^";
+            displayResult(successMessage, "success");
+
         } catch (error) {
             displayResult("오류가 발생했습니다: " + error.message, "error");
         } finally {
