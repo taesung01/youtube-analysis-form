@@ -258,91 +258,91 @@
             }
         }
 
-        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-        const emailScriptUrl = "https://script.google.com/macros/s/[YOUR_NEW_WEB_APP_ID]/exec"; // 새로 배포한 URL로 교체
-        let isSubmitting = false;
+       const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
+       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbyw-IcCJsslQlZbeljkk8E7wcQqLO144tlZ0PXV3FV9iWJIqfskG26KOBgOlr7FX4Qp/exec"; // 여기에 반영!
+       let isSubmitting = false;
 
-        document.getElementById("emailSelect").addEventListener("change", function() {
-            const emailDirectInput = document.getElementById("emailDirect");
-            if (this.value === "direct") {
-                emailDirectInput.style.display = "block";
-                emailDirectInput.required = true;
-            } else {
-                emailDirectInput.style.display = "none";
-                emailDirectInput.required = false;
-                emailDirectInput.value = "";
-            }
-        });
+    document.getElementById("emailSelect").addEventListener("change", function() {
+        const emailDirectInput = document.getElementById("emailDirect");
+        if (this.value === "direct") {
+            emailDirectInput.style.display = "block";
+            emailDirectInput.required = true;
+        } else {
+            emailDirectInput.style.display = "none";
+            emailDirectInput.required = false;
+            emailDirectInput.value = "";
+        }
+    });
 
-        document.getElementById("analysis-form").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            
-            if (isSubmitting) return;
-            isSubmitting = true;
+    document.getElementById("analysis-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        
+        if (isSubmitting) return;
+        isSubmitting = true;
 
-            const videoUrl = document.getElementById("videoUrl").value;
-            const videoId = extractVideoId(videoUrl);
-            const emailSelect = document.getElementById("emailSelect").value;
-            const emailDirect = document.getElementById("emailDirect").value;
-            const analyzeComments = document.getElementById("analyzeComments").checked;
-            let email = emailSelect === "direct" ? emailDirect : emailSelect;
+        const videoUrl = document.getElementById("videoUrl").value;
+        const videoId = extractVideoId(videoUrl);
+        const emailSelect = document.getElementById("emailSelect").value;
+        const emailDirect = document.getElementById("emailDirect").value;
+        const analyzeComments = document.getElementById("analyzeComments").checked;
+        let email = emailSelect === "direct" ? emailDirect : emailSelect;
 
-            if (!videoId || !email) {
-                displayResult("유효한 YouTube URL과 이메일을 입력해 주세요.", "error");
-                isSubmitting = false;
-                return;
-            }
+        if (!videoId || !email) {
+            displayResult("유효한 YouTube URL과 이메일을 입력해 주세요.", "error");
+            isSubmitting = false;
+            return;
+        }
 
-            document.getElementById("videoId").value = videoId;
-            document.getElementById("submit-button").disabled = true;
-            document.getElementById("loading-spinner").style.display = "inline-block";
-            document.getElementById("result").style.display = "none";
+        document.getElementById("videoId").value = videoId;
+        document.getElementById("submit-button").disabled = true;
+        document.getElementById("loading-spinner").style.display = "inline-block";
+        document.getElementById("result").style.display = "none";
 
-            const requestData = { 
-                video_url: videoUrl,
-                videoId: videoId,
-                email: email
-            };
+        const requestData = { 
+            video_url: videoUrl,
+            videoId: videoId,
+            email: email
+        };
 
-            try {
-                // 기본 분석 요청 (Make.com)
-                await fetch(webhookUrl, {
+        try {
+            // 기본 분석 요청 (Make.com)
+            await fetch(webhookUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestData),
+                signal: AbortSignal.timeout(10000)
+            });
+
+            // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
+            if (analyzeComments) {
+                const commentsRequestData = {
+                    video_url: videoUrl,
+                    email: email,
+                    sendTo: "rookiets82@gmail.com"
+                };
+                await fetch(emailScriptUrl, {
                     method: "POST",
+                    mode: "no-cors",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(requestData),
+                    body: JSON.stringify(commentsRequestData),
                     signal: AbortSignal.timeout(10000)
                 });
-
-                // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
-                if (analyzeComments) {
-                    const commentsRequestData = {
-                        video_url: videoUrl,
-                        email: email,
-                        sendTo: "rookiets82@gmail.com"
-                    };
-                    await fetch(emailScriptUrl, {
-                        method: "POST",
-                        mode: "no-cors", // CORS 우회
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(commentsRequestData),
-                        signal: AbortSignal.timeout(10000)
-                    });
-                    console.log("댓글 분석 요청이 전송되었습니다.");
-                }
-
-                let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
-                if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
-                successMessage += " 조금만 기다려 주세요^^";
-                displayResult(successMessage, "success");
-
-            } catch (error) {
-                displayResult("오류가 발생했습니다: " + error.message, "error");
-            } finally {
-                document.getElementById("submit-button").disabled = false;
-                document.getElementById("loading-spinner").style.display = "none";
-                isSubmitting = false;
+                console.log("댓글 분석 요청이 전송되었습니다.");
             }
-        });
-    </script>
+
+            let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
+            if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
+            successMessage += " 조금만 기다려 주세요^^";
+            displayResult(successMessage, "success");
+
+        } catch (error) {
+            displayResult("오류가 발생했습니다: " + error.message, "error");
+        } finally {
+            document.getElementById("submit-button").disabled = false;
+            document.getElementById("loading-spinner").style.display = "none";
+            isSubmitting = false;
+        }
+    });
+</script>
 </body>
 </html>
