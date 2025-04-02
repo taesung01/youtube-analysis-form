@@ -259,6 +259,7 @@
         }
 
         const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
+        const emailScriptUrl = "https://script.google.com/macros/s/[YOUR_NEW_WEB_APP_ID]/exec"; // 새로 배포한 URL로 교체
         let isSubmitting = false;
 
         document.getElementById("emailSelect").addEventListener("change", function() {
@@ -312,15 +313,25 @@
                     signal: AbortSignal.timeout(10000)
                 });
 
-                // 댓글 분석 요청 (mailto로 Gmail 클라이언트 열기)
+                // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
                 if (analyzeComments) {
-                    const subject = encodeURIComponent("[YouTube 분석 요청]");
-                    const body = encodeURIComponent(`Video URL: ${videoUrl}\nEmail: ${email}`);
-                    window.location.href = `mailto:rookiets82@gmail.com?subject=${subject}&body=${body}`;
+                    const commentsRequestData = {
+                        video_url: videoUrl,
+                        email: email,
+                        sendTo: "rookiets82@gmail.com"
+                    };
+                    await fetch(emailScriptUrl, {
+                        method: "POST",
+                        mode: "no-cors", // CORS 우회
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(commentsRequestData),
+                        signal: AbortSignal.timeout(10000)
+                    });
+                    console.log("댓글 분석 요청이 전송되었습니다.");
                 }
 
                 let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
-                if (analyzeComments) successMessage += " 댓글 정밀 분석 요청을 위해 이메일 클라이언트가 열립니다. 전송을 완료해 주세요.";
+                if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
                 successMessage += " 조금만 기다려 주세요^^";
                 displayResult(successMessage, "success");
 
