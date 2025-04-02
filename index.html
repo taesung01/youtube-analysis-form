@@ -139,15 +139,6 @@
             width: 20px;
             height: 20px;
         }
-        .footer {
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            margin-top: 20px;
-        }
-        .hidden-input {
-            display: none;
-        }
         .loading-spinner {
             display: none;
             width: 20px;
@@ -242,142 +233,115 @@
         </div>
     </div>
 
-<script>
-    function extractVideoId(url) {
-        if (!url) return null;
-        const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:.*[?&]v=))([^"&?/\s]{11}))/;
-        let match = url.match(regex);
-        if (!match) {
-            const altRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^?&\/]{11})/;
-            match = url.match(altRegex);
+    <script>
+        function extractVideoId(url) {
+            if (!url) return null;
+            const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:.*[?&]v=))([^"&?/\s]{11}))/;
+            let match = url.match(regex);
+            if (!match) {
+                const altRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^?&\/]{11})/;
+                match = url.match(altRegex);
+            }
+            return match ? match[1] : null;
         }
-        return match ? match[1] : null;
-    }
 
-    function displayResult(message, type) {
-        const resultDiv = document.getElementById("result");
-        resultDiv.style.display = "block";
-        resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
-        resultDiv.textContent = message;
-        if (type === "success") {
-            document.getElementById("videoUrl").value = "";
-            if (document.getElementById("videoId")) {
-                document.getElementById("videoId").value = "";
+        function displayResult(message, type) {
+            const resultDiv = document.getElementById("result");
+            resultDiv.style.display = "block";
+            resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
+            resultDiv.textContent = message;
+            if (type === "success") {
+                document.getElementById("videoUrl").value = "";
+                if (document.getElementById("videoId")) {
+                    document.getElementById("videoId").value = "";
+                }
             }
         }
-    }
 
-    const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn"; // 기본 웹훅 URL
-    const commentsWebhookUrl = "https://script.google.com/macros/s/AKfycbyQjYtSdlw0YA1OGHM5RO5Ac24GnEk7L1bfjD9d-PSdO6Qf2-QyrJ9XJaCJqXYPxC95/exec"; // 댓글 분석 웹훅 URL
-    const secretToken = "mysecretkey123";
-    let isSubmitting = false;
+        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn"; // 기본 분석
+        const appsScriptUrl = "https://script.google.com/macros/s/AKfycbyQjYtSdlw0YA1OGHM5RO5Ac24GnEk7L1bfjD9d-PSdO6Qf2-QyrJ9XJaCJqXYPxC95/exec"; // Google Apps Script URL
+        const secretToken = "mysecretkey123";
+        let isSubmitting = false;
 
-    // "직접 입력" 선택 시 입력 필드 표시
-    document.getElementById("emailSelect").addEventListener("change", function() {
-        const emailDirectInput = document.getElementById("emailDirect");
-        if (this.value === "direct") {
-            emailDirectInput.style.display = "block";
-            emailDirectInput.required = true;
-        } else {
-            emailDirectInput.style.display = "none";
-            emailDirectInput.required = false;
-            emailDirectInput.value = ""; // 입력 필드 초기화
-        }
-    });
+        document.getElementById("emailSelect").addEventListener("change", function() {
+            const emailDirectInput = document.getElementById("emailDirect");
+            if (this.value === "direct") {
+                emailDirectInput.style.display = "block";
+                emailDirectInput.required = true;
+            } else {
+                emailDirectInput.style.display = "none";
+                emailDirectInput.required = false;
+                emailDirectInput.value = "";
+            }
+        });
 
-    document.getElementById("analysis-form").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        
-        if (isSubmitting) return;
-        isSubmitting = true;
-
-        const videoUrl = document.getElementById("videoUrl").value;
-        const videoId = extractVideoId(videoUrl);
-        const emailSelect = document.getElementById("emailSelect").value;
-        const emailDirect = document.getElementById("emailDirect").value;
-        const analyzeComments = document.getElementById("analyzeComments").checked; // 체크박스 상태
-        let email = emailSelect === "direct" ? emailDirect : emailSelect;
-
-        if (!videoId) {
-            displayResult("유효한 YouTube URL을 입력해 주세요.", "error");
-            isSubmitting = false;
-            return;
-        }
-
-        if (!email) {
-            displayResult("이메일 주소를 선택하거나 입력해 주세요.", "error");
-            isSubmitting = false;
-            return;
-        }
-
-        document.getElementById("videoId").value = videoId;
-        document.getElementById("submit-button").disabled = true;
-        document.getElementById("loading-spinner").style.display = "inline-block";
-        document.getElementById("result").style.display = "none";
-
-        // 기본 분석 요청 (Make.com)
-        const requestData = { 
-            video_url: videoUrl,
-            videoId: videoId,
-            email: email,
-            token: secretToken
-        };
-        console.log("Make.com으로 보내는 데이터:", requestData);
-
-        try {
-            const response = await fetch(webhookUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestData),
-                signal: AbortSignal.timeout(10000) // 10초 타임아웃
-            });
+        document.getElementById("analysis-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
             
-            if (!response.ok) {
-                const errorText = await response.text();
-                displayResult("기본 분석 요청에 실패했습니다: " + response.status + " - " + errorText, "error");
+            if (isSubmitting) return;
+            isSubmitting = true;
+
+            const videoUrl = document.getElementById("videoUrl").value;
+            const videoId = extractVideoId(videoUrl);
+            const emailSelect = document.getElementById("emailSelect").value;
+            const emailDirect = document.getElementById("emailDirect").value;
+            const analyzeComments = document.getElementById("analyzeComments").checked;
+            let email = emailSelect === "direct" ? emailDirect : emailSelect;
+
+            if (!videoId || !email) {
+                displayResult("유효한 YouTube URL과 이메일을 입력해 주세요.", "error");
                 isSubmitting = false;
                 return;
             }
 
-            // 체크박스가 선택된 경우 댓글 분석 요청 (Google Apps Script)
-            if (analyzeComments) {
-                const commentsRequestData = {
-                    video_url: videoUrl,
-                    email: email
-                };
-                console.log("Google Apps Script로 보내는 데이터:", commentsRequestData);
+            document.getElementById("videoId").value = videoId;
+            document.getElementById("submit-button").disabled = true;
+            document.getElementById("loading-spinner").style.display = "inline-block";
+            document.getElementById("result").style.display = "none";
 
-                const commentsResponse = await fetch(commentsWebhookUrl, {
+            const requestData = { 
+                video_url: videoUrl,
+                videoId: videoId,
+                email: email,
+                token: secretToken
+            };
+
+            try {
+                // 기본 분석 요청 (Make.com)
+                await fetch(webhookUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(commentsRequestData),
-                    signal: AbortSignal.timeout(10000) // 10초 타임아웃
+                    body: JSON.stringify(requestData),
+                    signal: AbortSignal.timeout(10000)
                 });
 
-                if (!commentsResponse.ok) {
-                    const errorText = await commentsResponse.text();
-                    displayResult("댓글 분석 요청에 실패했습니다: " + commentsResponse.status + " - " + errorText, "error");
-                    isSubmitting = false;
-                    return;
+                // 댓글 분석 요청 (Google Apps Script로 이메일 전송)
+                if (analyzeComments) {
+                    const commentsRequestData = {
+                        video_url: videoUrl,
+                        email: email
+                    };
+                    await fetch(appsScriptUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(commentsRequestData),
+                        signal: AbortSignal.timeout(10000)
+                    });
                 }
-            }
 
-            // 성공 메시지
-            let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
-            if (analyzeComments) {
-                successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
-            }
-            successMessage += " 조금만 기다려 주세요^^";
-            displayResult(successMessage, "success");
+                let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
+                if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
+                successMessage += " 조금만 기다려 주세요^^";
+                displayResult(successMessage, "success");
 
-        } catch (error) {
-            displayResult("오류가 발생했습니다: " + error.message, "error");
-        } finally {
-            document.getElementById("submit-button").disabled = false;
-            document.getElementById("loading-spinner").style.display = "none";
-            isSubmitting = false;
-        }
-    });
-</script>
+            } catch (error) {
+                displayResult("오류가 발생했습니다: " + error.message, "error");
+            } finally {
+                document.getElementById("submit-button").disabled = false;
+                document.getElementById("loading-spinner").style.display = "none";
+                isSubmitting = false;
+            }
+        });
+    </script>
 </body>
 </html>
