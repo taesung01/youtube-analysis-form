@@ -259,7 +259,7 @@
         }
 
        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbyFA9oij1re65f_5hxap1nhvhuZ2slPAhhnW5Ei6OPPelqY90KqLYZdYXE9QYIZ74gkQA/exec"; // 여기에 반영!
+       const emailScriptUrl = "https://script.google.com/macros/s/AKfycby_UZiVr_FVzxObl1hYwbd2YJWSTboTQb962US95KOQExYe7Mj_elDMEzkw6MDCqoCYLQ/exec"; // 여기에 반영!
        let isSubmitting = false;
 
     document.getElementById("emailSelect").addEventListener("change", function() {
@@ -329,7 +329,6 @@ if (analyzeComments) {
     });
     console.log("댓글 분석 요청이 전송되었습니다.");
 }
-
 
             let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
             if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
