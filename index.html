@@ -315,19 +315,22 @@
 
             // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
 if (analyzeComments) {
-    const commentsRequestData = {
-        video_url: videoUrl,
-        email: email,
-        sendTo: "lg.cxinnovationdx.team@gmail.com"
-    };
-    await fetch(emailScriptUrl, {
-        method: "POST",
-        mode: 'cors', // CORS 활성화
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(commentsRequestData),
-        signal: AbortSignal.timeout(10000)
-    });
-    console.log("댓글 분석 요청이 전송되었습니다.");
+  const commentsRequestData = {
+    video_url: videoUrl,
+    email: email,
+    sendTo: "lg.cxinnovationdx.team@gmail.com"
+  };
+  await fetch(emailScriptUrl, {
+    method: "POST",
+    mode: 'cors', // CORS 활성화
+    headers: {
+      "Content-Type": "application/json",
+      "Origin": "https://taesung01.github.io" // Origin 헤더 추가
+    },
+    body: JSON.stringify(commentsRequestData),
+    signal: AbortSignal.timeout(10000)
+  });
+  console.log("댓글 분석 요청이 전송되었습니다.");
 }
 
 
