@@ -259,7 +259,7 @@
         }
 
        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-       const emailScriptUrl = "https://script.google.com/macros/s/AKfycby_UZiVr_FVzxObl1hYwbd2YJWSTboTQb962US95KOQExYe7Mj_elDMEzkw6MDCqoCYLQ/exec"; // 여기에 반영!
+       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzDMEzLw7p0plFKzuYVJeRa4bYdux2ZSjPhb1tY16XdRg_f5eVzwvLiYlsDTCvCzLaaPA/exec"; // 여기에 반영!
        let isSubmitting = false;
 
     document.getElementById("emailSelect").addEventListener("change", function() {
@@ -320,15 +320,19 @@ if (analyzeComments) {
         email: email,
         sendTo: "lg.cxinnovationdx.team@gmail.com"
     };
-    await fetch(emailScriptUrl, {
+
+    // 쿼리 파라미터로 데이터 전송
+    const params = new URLSearchParams(commentsRequestData).toString();
+
+    await fetch(emailScriptUrl + '?' + params, {
         method: "POST",
-        mode: 'cors', // CORS 활성화
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(commentsRequestData),
+        mode: 'no-cors', // CORS 비활성화
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }, // URL 인코딩 방식으로 전송
         signal: AbortSignal.timeout(10000)
     });
     console.log("댓글 분석 요청이 전송되었습니다.");
 }
+
 
             let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
             if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
