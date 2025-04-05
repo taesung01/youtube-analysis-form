@@ -259,7 +259,7 @@
         }
 
        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzjcjBSAswDkv6ZauIfpJitaioynGjXPIwnK7DpYDZSsUP7FMvSZY4UKWdcvF8LE0sJHg/exec"; // 여기에 반영!
+       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzkcmvSjMMZmkAVJFWNaxpJHdeIplGQIhqII6qoyvfiVfiYzKNdiAsGTaWAS0z_MKZq-Q/exec"; // 여기에 반영!
        let isSubmitting = false;
 
     document.getElementById("emailSelect").addEventListener("change", function() {
@@ -315,20 +315,21 @@
 
             // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
 if (analyzeComments) {
-  const commentsRequestData = {
-    video_url: videoUrl,
-    email: email,
-    sendTo: "lg.cxinnovationdx.team@gmail.com"
-  };
-  await fetch(emailScriptUrl, {
-    method: "POST",
-    mode: 'cors', // CORS 활성화
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(commentsRequestData),
-    signal: AbortSignal.timeout(10000)
-  });
-  console.log("댓글 분석 요청이 전송되었습니다.");
+    const commentsRequestData = {
+        video_url: videoUrl,
+        email: email,
+        sendTo: "lg.cxinnovationdx.team@gmail.com"
+    };
+    await fetch(emailScriptUrl, {
+        method: "POST",
+        mode: 'cors', // CORS 활성화
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(commentsRequestData),
+        signal: AbortSignal.timeout(10000)
+    });
+    console.log("댓글 분석 요청이 전송되었습니다.");
 }
+
 
 
 
