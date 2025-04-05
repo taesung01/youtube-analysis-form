@@ -259,7 +259,7 @@
         }
 
        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzorF74in2M6MT_hO4qK7u0Yflaoxm41LgvQR2jtPPQ04T4OL58ES6342FJqrl-EQa-Sw/exec"; // 여기에 반영!
+       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbyFA9oij1re65f_5hxap1nhvhuZ2slPAhhnW5Ei6OPPelqY90KqLYZdYXE9QYIZ74gkQA/exec"; // 여기에 반영!
        let isSubmitting = false;
 
     document.getElementById("emailSelect").addEventListener("change", function() {
@@ -313,7 +313,7 @@
                 signal: AbortSignal.timeout(10000)
             });
 
-            // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
+           // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
 if (analyzeComments) {
     const commentsRequestData = {
         video_url: videoUrl,
