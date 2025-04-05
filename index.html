@@ -323,14 +323,13 @@ if (analyzeComments) {
   await fetch(emailScriptUrl, {
     method: "POST",
     mode: 'cors', // CORS 활성화
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(commentsRequestData),
     signal: AbortSignal.timeout(10000)
   });
   console.log("댓글 분석 요청이 전송되었습니다.");
 }
+
 
 
             let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
