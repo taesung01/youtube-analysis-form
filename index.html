@@ -324,8 +324,7 @@ if (analyzeComments) {
     method: "POST",
     mode: 'cors', // CORS 활성화
     headers: {
-      "Content-Type": "application/json",
-      "Origin": "https://taesung01.github.io" // Origin 헤더 추가
+      "Content-Type": "application/json"
     },
     body: JSON.stringify(commentsRequestData),
     signal: AbortSignal.timeout(10000)
