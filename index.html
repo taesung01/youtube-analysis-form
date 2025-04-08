@@ -169,6 +169,19 @@
             color: #cc0000;
             border: 1px solid #ff0000;
         }
+        /* 개인정보 처리방침 링크 스타일 추가 */
+        .privacy-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+        .privacy-link a {
+            color: #FF0000;
+            text-decoration: none;
+        }
+        .privacy-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -230,6 +243,10 @@
                 </button>
             </form>
             <div id="result" class="result-message"></div>
+            <!-- 개인정보 처리방침 링크 추가 -->
+            <div class="privacy-link">
+                <a href="https://taesung01.github.io/youtube-analysis-form/privacy-policy.md" target="_blank">개인정보 처리방침</a>
+            </div>
         </div>
     </div>
 
@@ -258,95 +275,93 @@
             }
         }
 
-       const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-       const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzDMEzLw7p0plFKzuYVJeRa4bYdux2ZSjPhb1tY16XdRg_f5eVzwvLiYlsDTCvCzLaaPA/exec"; // 여기에 반영!
-       let isSubmitting = false;
+        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
+        const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzDMEzLw7p0plFKzuYVJeRa4bYdux2ZSjPhb1tY16XdRg_f5eVzwvLiYlsDTCvCzLaaPA/exec";
+        let isSubmitting = false;
 
-    document.getElementById("emailSelect").addEventListener("change", function() {
-        const emailDirectInput = document.getElementById("emailDirect");
-        if (this.value === "direct") {
-            emailDirectInput.style.display = "block";
-            emailDirectInput.required = true;
-        } else {
-            emailDirectInput.style.display = "none";
-            emailDirectInput.required = false;
-            emailDirectInput.value = "";
-        }
-    });
+        document.getElementById("emailSelect").addEventListener("change", function() {
+            const emailDirectInput = document.getElementById("emailDirect");
+            if (this.value === "direct") {
+                emailDirectInput.style.display = "block";
+                emailDirectInput.required = true;
+            } else {
+                emailDirectInput.style.display = "none";
+                emailDirectInput.required = false;
+                emailDirectInput.value = "";
+            }
+        });
 
-    document.getElementById("analysis-form").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        
-        if (isSubmitting) return;
-        isSubmitting = true;
+        document.getElementById("analysis-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            if (isSubmitting) return;
+            isSubmitting = true;
 
-        const videoUrl = document.getElementById("videoUrl").value;
-        const videoId = extractVideoId(videoUrl);
-        const emailSelect = document.getElementById("emailSelect").value;
-        const emailDirect = document.getElementById("emailDirect").value;
-        const analyzeComments = document.getElementById("analyzeComments").checked;
-        let email = emailSelect === "direct" ? emailDirect : emailSelect;
+            const videoUrl = document.getElementById("videoUrl").value;
+            const videoId = extractVideoId(videoUrl);
+            const emailSelect = document.getElementById("emailSelect").value;
+            const emailDirect = document.getElementById("emailDirect").value;
+            const analyzeComments = document.getElementById("analyzeComments").checked;
+            let email = emailSelect === "direct" ? emailDirect : emailSelect;
 
-        if (!videoId || !email) {
-            displayResult("유효한 YouTube URL과 이메일을 입력해 주세요.", "error");
-            isSubmitting = false;
-            return;
-        }
+            if (!videoId || !email) {
+                displayResult("유효한 YouTube URL과 이메일을 입력해 주세요.", "error");
+                isSubmitting = false;
+                return;
+            }
 
-        document.getElementById("videoId").value = videoId;
-        document.getElementById("submit-button").disabled = true;
-        document.getElementById("loading-spinner").style.display = "inline-block";
-        document.getElementById("result").style.display = "none";
+            document.getElementById("videoId").value = videoId;
+            document.getElementById("submit-button").disabled = true;
+            document.getElementById("loading-spinner").style.display = "inline-block";
+            document.getElementById("result").style.display = "none";
 
-        const requestData = { 
-            video_url: videoUrl,
-            videoId: videoId,
-            email: email
-        };
+            const requestData = { 
+                video_url: videoUrl,
+                videoId: videoId,
+                email: email
+            };
 
-        try {
-            // 기본 분석 요청 (Make.com)
-            await fetch(webhookUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestData),
-                signal: AbortSignal.timeout(10000)
-            });
+            try {
+                // 기본 분석 요청 (Make.com)
+                await fetch(webhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData),
+                    signal: AbortSignal.timeout(10000)
+                });
 
-           // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
-if (analyzeComments) {
-    const commentsRequestData = {
-        video_url: videoUrl,
-        email: email,
-        sendTo: "lg.cxinnovationdx.team@gmail.com"
-    };
+                // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
+                if (analyzeComments) {
+                    const commentsRequestData = {
+                        video_url: videoUrl,
+                        email: email,
+                        sendTo: "lg.cxinnovationdx.team@gmail.com"
+                    };
 
-    // 쿼리 파라미터로 데이터 전송
-    const params = new URLSearchParams(commentsRequestData).toString();
+                    const params = new URLSearchParams(commentsRequestData).toString();
 
-    await fetch(emailScriptUrl + '?' + params, {
-        method: "POST",
-        mode: 'no-cors', // CORS 비활성화
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }, // URL 인코딩 방식으로 전송
-        signal: AbortSignal.timeout(10000)
-    });
-    console.log("댓글 분석 요청이 전송되었습니다.");
-}
+                    await fetch(emailScriptUrl + '?' + params, {
+                        method: "POST",
+                        mode: 'no-cors',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        signal: AbortSignal.timeout(10000)
+                    });
+                    console.log("댓글 분석 요청이 전송되었습니다.");
+                }
 
+                let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
+                if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
+                successMessage += " 조금만 기다려 주세요^^";
+                displayResult(successMessage, "success");
 
-            let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
-            if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
-            successMessage += " 조금만 기다려 주세요^^";
-            displayResult(successMessage, "success");
-
-        } catch (error) {
-            displayResult("오류가 발생했습니다: " + error.message, "error");
-        } finally {
-            document.getElementById("submit-button").disabled = false;
-            document.getElementById("loading-spinner").style.display = "none";
-            isSubmitting = false;
-        }
-    });
-</script>
+            } catch (error) {
+                displayResult("오류가 발생했습니다: " + error.message, "error");
+            } finally {
+                document.getElementById("submit-button").disabled = false;
+                document.getElementById("loading-spinner").style.display = "none";
+                isSubmitting = false;
+            }
+        });
+    </script>
 </body>
 </html>
