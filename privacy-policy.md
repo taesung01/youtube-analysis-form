@@ -32,7 +32,43 @@
 
 본 개인정보 처리 방침에 대한 문의는 아래 연락처로 문의해 주세요:
 
-- **이메일**: lg.cxinnovationdx.team@gmail.com
-- **담당**: LG전자 CX Innovation DX Team
 
-마지막 업데이트: 2025년 4월 9일
+
+# Privacy Policy
+
+This Privacy Policy explains the types of personal information collected by the "YouTube Analysis Form" (hereinafter referred to as "the App"), the purpose of collection, usage methods, and protection measures. The App is developed and operated by **Tae-Sung Lee**, a developer affiliated with **LG Electronics**, and provides a YouTube comment analysis service.
+
+## 1. Personal Information Collected
+
+The App collects the following personal information:
+
+- **YouTube Video URL**: The URL of the YouTube video that the user wishes to analyze.
+- **Email Address**: Contact information used to send analysis results to the user.
+- **Data Access via OAuth**: Access to video information (e.g., title, view count) and comments through the YouTube Data API via the user's Google account.
+
+## 2. Purpose of Collecting Personal Information
+
+The App uses the collected personal information for the following purposes:
+
+- To analyze comments and related data of the YouTube video requested by the user.
+- To send the analysis results to the email address provided by the user.
+- Data collected via OAuth is used solely for generating analysis reports and not for any other purpose.
+
+## 3. Storage and Protection of Personal Information
+
+- **Retention Period**: Collected personal information (email address and URL) is deleted immediately after the analysis is completed and is not stored permanently. Analysis results are not stored separately after being sent via email.
+- **Protection Measures**: Personal information is processed in the secure environment of Google Apps Script, with encryption and access restrictions in place to prevent external leaks.
+- **Third-Party Sharing**: Personal information is not shared with third parties without the user's explicit consent. However, it may be provided in accordance with applicable laws if legally required.
+
+## 4. Changes to the Privacy Policy
+
+This Privacy Policy may be revised in response to changes in laws, Google policies, or the service itself. If there are any changes, the updated content will be posted on this page (`https://taesung01.github.io/youtube-analysis-form/privacy-policy.html`).
+
+## 5. Contact Us
+
+For inquiries regarding this Privacy Policy, please contact us at the following:
+
+- **Email**: lg.cxinnovationdx.team@gmail.com
+- **Contact**: LG Electronics CX Innovation DX Team
+
+Last Updated: April 9, 2025
