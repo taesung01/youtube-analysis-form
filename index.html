@@ -287,66 +287,6 @@
             }
         }
 
-        // YouTube Data API 호출 함수 (비디오 정보 가져오기)
-        async function fetchYouTubeVideoInfo(videoId, accessToken) {
-            const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}`;
-            const response = await fetch(url, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            if (!response.ok) {
-                throw new Error('비디오 정보를 가져오지 못했습니다.');
-            }
-            const data = await response.json();
-            if (data.items && data.items.length > 0) {
-                const item = data.items[0];
-                return {
-                    title: item.snippet.title || '알 수 없는 제목',
-                    description: item.snippet.description || '',
-                    publishDate: item.snippet.publishedAt || '',
-                    views: Number(item.statistics.viewCount || 0),
-                    likes: Number(item.statistics.likeCount || 0),
-                    commentCount: Number(item.statistics.commentCount || 0)
-                };
-            }
-            return { title: '알 수 없는 제목', views: 0, likes: 0, commentCount: 0, publishDate: '' };
-        }
-
-        // YouTube Data API 호출 함수 (댓글 가져오기)
-        async function fetchAllComments(videoId, accessToken) {
-            let comments = [];
-            let nextPageToken = '';
-            const maxComments = 1000;
-
-            do {
-                const url = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&maxResults=100&pageToken=${nextPageToken}`;
-                const response = await fetch(url, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error('댓글을 가져오지 못했습니다.');
-                }
-                const data = await response.json();
-                if (!data.items || data.items.length === 0) break;
-
-                data.items.forEach(item => {
-                    const comment = item.snippet.topLevelComment.snippet;
-                    comments.push({
-                        text: comment.textDisplay || '',
-                        likeCount: comment.likeCount || 0
-                    });
-                });
-
-                nextPageToken = data.nextPageToken || '';
-                if (comments.length >= maxComments * 1.5) break;
-            } while (nextPageToken);
-
-            return comments;
-        }
-
         // URL 해시에서 액세스 토큰 추출
         function getAccessTokenFromHash() {
             const hash = window.location.hash;
@@ -358,58 +298,11 @@
         window.onload = function() {
             const accessToken = getAccessTokenFromHash();
             if (accessToken) {
-                // 인증 후 리다이렉트된 경우, 저장된 데이터 복원
-                const savedData = JSON.parse(localStorage.getItem('analysisData'));
-                if (savedData) {
-                    const { videoId, email, analyzeComments } = savedData;
-                    processAnalysis(videoId, email, analyzeComments, accessToken);
-                    localStorage.removeItem('analysisData'); // 데이터 삭제
-                    window.location.hash = ''; // URL 해시 제거
-                }
+                // 인증 성공 메시지 표시
+                displayResult("✅ OAuth2 인증이 성공적으로 완료되었습니다!", "success");
+                window.location.hash = ''; // URL 해시 제거
             }
         };
-
-        // 분석 처리 함수
-        async function processAnalysis(videoId, email, analyzeComments, accessToken) {
-            try {
-                // 비디오 정보 가져오기
-                const videoInfo = await fetchYouTubeVideoInfo(videoId, accessToken);
-                console.log('비디오 정보:', videoInfo);
-
-                let comments = [];
-                if (analyzeComments) {
-                    // 댓글 가져오기
-                    comments = await fetchAllComments(videoId, accessToken);
-                    console.log('댓글 수:', comments.length);
-                }
-
-                // Make.com으로 기본 분석 요청 전송
-                const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-                const requestData = {
-                    video_url: `https://www.youtube.com/watch?v=${videoId}`,
-                    videoId: videoId,
-                    email: email
-                };
-                await fetch(webhookUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(requestData),
-                    signal: AbortSignal.timeout(10000)
-                });
-
-                let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
-                if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
-                successMessage += " 조금만 기다려 주세요^^";
-                displayResult(successMessage, "success");
-
-            } catch (error) {
-                displayResult("오류가 발생했습니다: " + error.message, "error");
-            } finally {
-                document.getElementById("submit-button").disabled = false;
-                document.getElementById("loading-spinner").style.display = "none";
-                isSubmitting = false;
-            }
-        }
 
         let isSubmitting = false;
 
@@ -435,8 +328,7 @@
             const videoId = extractVideoId(videoUrl);
             const emailSelect = document.getElementById("emailSelect").value;
             const emailDirect = document.getElementById("emailDirect").value;
-            const analyzeComments = document.getElementById("analyzeComments").checked;
-            let email = emailSelect === "direct" ? emailDirect : emailSelect;
+            const email = emailSelect === "direct" ? emailDirect : emailSelect;
 
             if (!videoId || !email) {
                 displayResult("유효한 YouTube URL과 이메일을 입력해 주세요.", "error");
@@ -448,10 +340,6 @@
             document.getElementById("submit-button").disabled = true;
             document.getElementById("loading-spinner").style.display = "inline-block";
             document.getElementById("result").style.display = "none";
-
-            // 데이터를 localStorage에 저장
-            const analysisData = { videoId, email, analyzeComments };
-            localStorage.setItem('analysisData', JSON.stringify(analysisData));
 
             // OAuth2 인증 페이지로 리다이렉트
             window.location.href = AUTH_URL;
