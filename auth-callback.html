@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth2 인증 콜백</title>
+</head>
+<body>
+    <script>
+        // URL 해시에서 액세스 토큰 추출
+        function getAccessTokenFromHash() {
+            const hash = window.location.hash;
+            const params = new URLSearchParams(hash.substring(1));
+            return params.get('access_token');
+        }
+
+        // 인증 결과 처리
+        const accessToken = getAccessTokenFromHash();
+        if (accessToken) {
+            // 부모 창으로 성공 메시지 전송
+            window.opener.postMessage('authSuccess', '*');
+        } else {
+            // 부모 창으로 실패 메시지 전송
+            window.opener.postMessage('authFailed', '*');
+        }
+
+        // 팝업 창 닫기
+        window.close();
+    </script>
+</body>
+</html>
