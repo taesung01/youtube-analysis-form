@@ -53,7 +53,6 @@
             margin-right: 15px;
             fill: #FF0000;
         }
-        /* 로고 이미지 스타일 추가 */
         .app-logo {
             width: 80px;
             height: 80px;
@@ -175,7 +174,6 @@
             color: #cc0000;
             border: 1px solid #ff0000;
         }
-        /* 개인정보 처리방침 링크 스타일 추가 */
         .privacy-link {
             margin-top: 20px;
             font-size: 14px;
@@ -194,7 +192,6 @@
     <div class="hero">
         <div class="container">
             <div class="logo-container">
-                <!-- 새로운 로고 이미지 추가 -->
                 <img src="https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/logo.png" alt="LG YouTube Analysis Form Logo" class="app-logo">
                 <svg class="analysis-icon" viewBox="0 0 24 24">
                     <path d="M4,4h16c1.1,0,2,0.9,2,2v12c0,1.1-0.9,2-2,2H4c-1.1,0-2-0.9-2-2V6C2,4.9,2.9,4,4,4z" fill="#FF0000" opacity="0.8"/>
@@ -251,9 +248,8 @@
                 </button>
             </form>
             <div id="result" class="result-message"></div>
-            <!-- 개인정보 처리방침 링크 추가 -->
             <div class="privacy-link">
-                <a href="https://taesung01.github.io/youtube-analysis-form/privacy-policy.md" target="_blank">개인정보 처리방침</a>
+                <a href="https://taesung01.github.io/youtube-analysis-form/privacy-policy.html" target="_blank">개인정보 처리방침</a>
             </div>
         </div>
     </div>
@@ -284,7 +280,7 @@
         }
 
         const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
-        const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzDMEzLw7p0plFKzuYVJeRa4bYdux2ZSjPhb1tY16XdRg_f5eVzwvLiYlsDTCvCzLaaPA/exec";
+        const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzT05KF7Yw_NuCK4uUeGMXGRK3UDQmQKwsF2c5_57JSZtJawUA0/exec";
         let isSubmitting = false;
 
         document.getElementById("emailSelect").addEventListener("change", function() {
@@ -338,22 +334,25 @@
                     signal: AbortSignal.timeout(10000)
                 });
 
-                // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
+                // 댓글 분석 요청 (Google Apps Script로 처리)
                 if (analyzeComments) {
                     const commentsRequestData = {
-                        video_url: videoUrl,
+                        videoUrl: videoUrl,
                         email: email,
                         sendTo: "lg.cxinnovationdx.team@gmail.com"
                     };
 
                     const params = new URLSearchParams(commentsRequestData).toString();
 
-                    await fetch(emailScriptUrl + '?' + params, {
-                        method: "POST",
+                    // Apps Script로 요청 보내기 (인증 필요 시 리다이렉트 처리)
+                    const response = await fetch(emailScriptUrl + '?' + params, {
+                        method: "GET",
+                        redirect: 'follow', // 리다이렉트를 자동으로 따름
                         mode: 'no-cors',
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
                         signal: AbortSignal.timeout(10000)
                     });
+
                     console.log("댓글 분석 요청이 전송되었습니다.");
                 }
 
