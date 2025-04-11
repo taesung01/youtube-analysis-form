@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[Customer Experience DX Team] YouTube Video Analysis Agent</title>
+    <title>[고객경험DX팀] YouTube 동영상 분석 Agent</title>
     <style>
         * {
             margin: 0;
@@ -53,6 +53,7 @@
             margin-right: 15px;
             fill: #FF0000;
         }
+        /* 로고 이미지 스타일 추가 */
         .app-logo {
             width: 80px;
             height: 80px;
@@ -139,12 +140,6 @@
             transform: translateY(1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .reset-button {
-            background-color: #666;
-        }
-        .reset-button:hover {
-            background-color: #555;
-        }
         .button-icon {
             margin-right: 10px;
             width: 20px;
@@ -180,6 +175,7 @@
             color: #cc0000;
             border: 1px solid #ff0000;
         }
+        /* 개인정보 처리방침 링크 스타일 추가 */
         .privacy-link {
             margin-top: 20px;
             font-size: 14px;
@@ -198,6 +194,7 @@
     <div class="hero">
         <div class="container">
             <div class="logo-container">
+                <!-- 새로운 로고 이미지 추가 -->
                 <img src="https://raw.githubusercontent.com/taesung01/youtube-analysis-form/main/logo.png" alt="LG YouTube Analysis Form Logo" class="app-logo">
                 <svg class="analysis-icon" viewBox="0 0 24 24">
                     <path d="M4,4h16c1.1,0,2,0.9,2,2v12c0,1.1-0.9,2-2,2H4c-1.1,0-2-0.9-2-2V6C2,4.9,2.9,4,4,4z" fill="#FF0000" opacity="0.8"/>
@@ -210,36 +207,36 @@
                     <circle cx="14" cy="14" r="1" fill="white"/>
                 </svg>
                 <div class="main-title">
-                    [Customer Experience DX Team] YouTube Video Analysis Agent
+                    [고객경험DX팀] YouTube 동영상 분석 Agent
                 </div>
             </div>
             <form id="analysis-form">
-                <div class="label-input">Enter YouTube Video URL</div>
-                <input type="text" id="videoUrl" name="videoUrl" required placeholder="Enter YouTube video URL">
-                <div class="input-example">Example: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
+                <div class="label-input">유튜브 비디오 URL 입력</div>
+                <input type="text" id="videoUrl" name="videoUrl" required placeholder="YouTube 동영상 URL을 입력하세요">
+                <div class="input-example">예: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
                 
-                <div class="label-input">Select Email Address</div>
+                <div class="label-input">이메일 주소 선택</div>
                 <select id="emailSelect" name="emailSelect" required>
-                    <option value="" disabled selected>Select a team member's email</option>
-                    <option value="direct">Enter manually</option>
-                    <option value="changil.shin@lge.com">Changil Shin (changil.shin@lge.com)</option>
-                    <option value="jihye80.kim@lge.com">Jihye Kim (jihye80.kim@lge.com)</option>
-                    <option value="philsoo.kim@lge.com">Philsoo Kim (philsoo.kim@lge.com)</option>
-                    <option value="wade.kim@lge.com">Hoyeon Kim (wade.kim@lge.com)</option>
-                    <option value="taesung01.lee@lge.com">Taesung Lee (taesung01.lee@lge.com)</option>
-                    <option value="sean.chong@lge.com">Kapsung Chung (sean.chong@lge.com)</option>
-                    <option value="hoyoung.chung@lge.com">Hoyoung Chung (hoyoung.chung@lge.com)</option>
-                    <option value="sunghoon.cha@lge.com">Sunghoon Cha (sunghoon.cha@lge.com)</option>
-                    <option value="boram86.choi@lge.com">Boram Choi (boram86.choi@lge.com)</option>
-                    <option value="dahee3.kim@lge.com">Dahee Kim (dahee3.kim@lge.com)</option>
+                    <option value="" disabled selected>팀원 이메일을 선택하세요</option>
+                    <option value="direct">직접 입력</option>
+                    <option value="changil.shin@lge.com">신창일 (changil.shin@lge.com)</option>
+                    <option value="jihye80.kim@lge.com">김지혜 (jihye80.kim@lge.com)</option>
+                    <option value="philsoo.kim@lge.com">김필수 (philsoo.kim@lge.com)</option>
+                    <option value="wade.kim@lge.com">김호연 (wade.kim@lge.com)</option>
+                    <option value="taesung01.lee@lge.com">이태성 (taesung01.lee@lge.com)</option>
+                    <option value="sean.chong@lge.com">정갑성 (sean.chong@lge.com)</option>
+                    <option value="hoyoung.chung@lge.com">정호영 (hoyoung.chung@lge.com)</option>
+                    <option value="sunghoon.cha@lge.com">차성훈 (sunghoon.cha@lge.com)</option>
+                    <option value="boram86.choi@lge.com">최보람 (boram86.choi@lge.com)</option>
+                    <option value="dahee3.kim@lge.com">김다희 (dahee3.kim@lge.com)</option>
                 </select>
-                <input type="email" id="emailDirect" name="email" placeholder="Enter email address" style="display: none;">
-                <div class="input-example">Select a team member's email or enter manually</div>
+                <input type="email" id="emailDirect" name="email" placeholder="이메일 주소를 입력하세요" style="display: none;">
+                <div class="input-example">결과를 받을 팀원의 이메일을 선택하거나 직접 입력하세요</div>
                 
                 <div style="text-align: left; margin: 15px 0;">
                     <label>
                         <input type="checkbox" id="analyzeComments" name="analyzeComments">
-                        Check this box if you want a detailed analysis of all comments on the requested video
+                        요청하신 영상의 전체 댓글 정밀 분석을 원하는 경우에는 체크를 눌러주세요
                     </label>
                 </div>
                 
@@ -250,28 +247,18 @@
                     <svg class="button-icon" viewBox="0 0 24 24" fill="white" id="button-icon">
                         <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM12 9c-.55 0-1 .45-1 1v1h2v-1c0-.55-.45-1-1-1z"></path>
                     </svg>
-                    Analyze
+                    분석하기
                 </button>
             </form>
-            <!-- 인증 리셋 버튼 추가 -->
-            <button id="reset-button" class="reset-button">
-                Reset Authentication
-            </button>
             <div id="result" class="result-message"></div>
+            <!-- 개인정보 처리방침 링크 추가 -->
             <div class="privacy-link">
-                <a href="https://taesung01.github.io/youtube-analysis-form/privacy-policy.html" target="_blank">Privacy Policy</a>
+                <a href="https://taesung01.github.io/youtube-analysis-form/privacy-policy.md" target="_blank">개인정보 처리방침</a>
             </div>
         </div>
     </div>
 
     <script>
-        // OAuth2 설정
-        const CLIENT_ID = '26174482972-b462avpkrvp0atfuqaqsgb2m713jrhos.apps.googleusercontent.com';
-        const REDIRECT_URI = 'https://taesung01.github.io/youtube-analysis-form/auth-callback.html';
-        const SCOPE = 'https://www.googleapis.com/auth/youtube.force-ssl';
-        const AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=${SCOPE}&state=auth`;
-
-        // 비디오 ID 추출 함수
         function extractVideoId(url) {
             if (!url) return null;
             const regex = /(?:https?:\/\/(?:www\.)?youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|(?:.*[?&]v=))([^"&?/\s]{11}))/;
@@ -283,13 +270,11 @@
             return match ? match[1] : null;
         }
 
-        // 결과 표시 함수 (앱 이름 추가)
         function displayResult(message, type) {
             const resultDiv = document.getElementById("result");
             resultDiv.style.display = "block";
             resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
-            // 앱 이름을 메시지에 추가
-            resultDiv.innerHTML = '<h2>LG YouTube Analysis Form</h2>' + message;
+            resultDiv.textContent = message;
             if (type === "success") {
                 document.getElementById("videoUrl").value = "";
                 if (document.getElementById("videoId")) {
@@ -298,25 +283,8 @@
             }
         }
 
-        // 팝업 창에서 보낸 메시지 수신
-        window.addEventListener('message', function(event) {
-            if (event.data === 'authSuccess') {
-                // 액세스 토큰 저장
-                const hash = window.location.hash;
-                const params = new URLSearchParams(hash.substring(1));
-                const accessToken = params.get('access_token');
-                if (accessToken) {
-                    localStorage.setItem('accessToken', accessToken);
-                }
-                displayResult("✅ OAuth2 authentication completed successfully!", "success");
-            } else if (event.data === 'authFailed') {
-                displayResult("❌ OAuth2 authentication failed. Please try again.", "error");
-            }
-            document.getElementById("submit-button").disabled = false;
-            document.getElementById("loading-spinner").style.display = "none";
-            isSubmitting = false;
-        });
-
+        const webhookUrl = "https://hook.eu2.make.com/9cr0lgsbj4gcrvnc81nr6hu82927rawn";
+        const emailScriptUrl = "https://script.google.com/macros/s/AKfycbzDMEzLw7p0plFKzuYVJeRa4bYdux2ZSjPhb1tY16XdRg_f5eVzwvLiYlsDTCvCzLaaPA/exec";
         let isSubmitting = false;
 
         document.getElementById("emailSelect").addEventListener("change", function() {
@@ -331,35 +299,6 @@
             }
         });
 
-        // 인증 리셋 기능
-        document.getElementById("reset-button").addEventListener("click", async function() {
-            const accessToken = localStorage.getItem('accessToken');
-            if (!accessToken) {
-                displayResult("No authentication token found to reset.", "error");
-                return;
-            }
-
-            try {
-                // Google OAuth 권한 철회 API 호출
-                const response = await fetch(`https://accounts.google.com/o/oauth2/revoke?token=${accessToken}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                });
-
-                if (response.ok) {
-                    // 로컬 저장소에서 토큰 삭제
-                    localStorage.removeItem('accessToken');
-                    displayResult("✅ Authentication has been reset successfully. Please authenticate again.", "success");
-                } else {
-                    displayResult("❌ Failed to reset authentication. Please try again.", "error");
-                }
-            } catch (error) {
-                displayResult("❌ An error occurred while resetting authentication: " + error.message, "error");
-            }
-        });
-
         document.getElementById("analysis-form").addEventListener("submit", async function(event) {
             event.preventDefault();
             
@@ -370,10 +309,11 @@
             const videoId = extractVideoId(videoUrl);
             const emailSelect = document.getElementById("emailSelect").value;
             const emailDirect = document.getElementById("emailDirect").value;
-            const email = emailSelect === "direct" ? emailDirect : emailSelect;
+            const analyzeComments = document.getElementById("analyzeComments").checked;
+            let email = emailSelect === "direct" ? emailDirect : emailSelect;
 
             if (!videoId || !email) {
-                displayResult("Please enter a valid YouTube URL and email address.", "error");
+                displayResult("유효한 YouTube URL과 이메일을 입력해 주세요.", "error");
                 isSubmitting = false;
                 return;
             }
@@ -383,17 +323,51 @@
             document.getElementById("loading-spinner").style.display = "inline-block";
             document.getElementById("result").style.display = "none";
 
-            // 인증 시작 전에 앱 이름 표시
-            displayResult("Initiating OAuth2 authentication with LG YouTube Analysis Form...", "success");
+            const requestData = { 
+                video_url: videoUrl,
+                videoId: videoId,
+                email: email
+            };
 
-            // 팝업 창 열기
-            const popup = window.open(AUTH_URL, 'OAuth2 Authentication', 'width=600,height=600');
-            if (!popup) {
-                displayResult("The popup window was blocked. Please allow popups in your browser settings.", "error");
+            try {
+                // 기본 분석 요청 (Make.com)
+                await fetch(webhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(requestData),
+                    signal: AbortSignal.timeout(10000)
+                });
+
+                // 댓글 분석 요청 (Google Apps Script로 자동 이메일 전송)
+                if (analyzeComments) {
+                    const commentsRequestData = {
+                        video_url: videoUrl,
+                        email: email,
+                        sendTo: "lg.cxinnovationdx.team@gmail.com"
+                    };
+
+                    const params = new URLSearchParams(commentsRequestData).toString();
+
+                    await fetch(emailScriptUrl + '?' + params, {
+                        method: "POST",
+                        mode: 'no-cors',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        signal: AbortSignal.timeout(10000)
+                    });
+                    console.log("댓글 분석 요청이 전송되었습니다.");
+                }
+
+                let successMessage = "분석 요청이 완료되었습니다. GPT가 분석중이니 5분 이내에 결과를 이메일로 받으실 수 있습니다.";
+                if (analyzeComments) successMessage += " 댓글 정밀 분석도 함께 진행됩니다.";
+                successMessage += " 조금만 기다려 주세요^^";
+                displayResult(successMessage, "success");
+
+            } catch (error) {
+                displayResult("오류가 발생했습니다: " + error.message, "error");
+            } finally {
                 document.getElementById("submit-button").disabled = false;
                 document.getElementById("loading-spinner").style.display = "none";
                 isSubmitting = false;
-                return;
             }
         });
     </script>
