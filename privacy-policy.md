@@ -32,6 +32,8 @@
 
 본 개인정보 처리 방침에 대한 문의는 아래 연락처로 문의해 주세요:
 
+- **Email**: lg.cxinnovationdx.team@gmail.com or taesung01.lee@lge.com
+- **Contact**: LG Electronics CX Innovation DX Team
 
 
 # Privacy Policy
@@ -68,7 +70,7 @@ This Privacy Policy may be revised in response to changes in laws, Google polici
 
 For inquiries regarding this Privacy Policy, please contact us at the following:
 
-- **Email**: lg.cxinnovationdx.team@gmail.com
+- **Email**: lg.cxinnovationdx.team@gmail.com or taesung01.lee@lge.com
 - **Contact**: LG Electronics CX Innovation DX Team
 
 Last Updated: April 9, 2025
