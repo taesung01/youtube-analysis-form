@@ -273,13 +273,12 @@
             return match ? match[1] : null;
         }
 
-        // 결과 표시 함수 (앱 이름 추가)
+        // 결과 표시 함수
         function displayResult(message, type) {
             const resultDiv = document.getElementById("result");
             resultDiv.style.display = "block";
             resultDiv.className = "result-message " + (type === "success" ? "success-message" : "error-message");
-            // 앱 이름을 메시지에 추가
-            resultDiv.innerHTML = '<h2>LG YouTube Analysis Form</h2>' + message;
+            resultDiv.textContent = message;
             if (type === "success") {
                 document.getElementById("videoUrl").value = "";
                 if (document.getElementById("videoId")) {
@@ -336,9 +335,6 @@
             document.getElementById("submit-button").disabled = true;
             document.getElementById("loading-spinner").style.display = "inline-block";
             document.getElementById("result").style.display = "none";
-
-            // 인증 시작 전에 앱 이름 표시
-            displayResult("Initiating OAuth2 authentication with LG YouTube Analysis Form...", "success");
 
             // 팝업 창 열기
             const popup = window.open(AUTH_URL, 'OAuth2 Authentication', 'width=600,height=600');
