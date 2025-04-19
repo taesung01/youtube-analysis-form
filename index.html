@@ -72,6 +72,7 @@
             color: #333;
             margin-bottom: 12px;
             text-align: left;
+            flex: 1; /* flex를 사용해 라벨이 남은 공간을 차지하도록 */
         }
         .input-example {
             font-size: 13px;
@@ -186,18 +187,45 @@
         .privacy-link a:hover {
             text-decoration: underline;
         }
-        /* dashboard-link 스타일 추가 */
-        .dashboard-link {
-            margin-top: 10px;
+        /* dashboard 버튼 스타일 */
+        .dashboard-button {
+            width: 50%;
+            padding: 8px;
+            background: linear-gradient(135deg, #6B7280, #4B5563);
+            color: white;
+            border: none;
+            border-radius: 6px;
             font-size: 14px;
-            color: #333;
-        }
-        .dashboard-link a {
-            color: #FF0000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             text-decoration: none;
         }
-        .dashboard-link a:hover {
-            text-decoration: underline;
+        .dashboard-button:hover {
+            background: linear-gradient(135deg, #5B6170, #3B4553);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .dashboard-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+        .dashboard-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        /* 라벨과 버튼을 같은 라인에 배치하기 위한 flex 컨테이너 */
+        .form-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
         }
     </style>
 </head>
@@ -221,7 +249,21 @@
                 </div>
             </div>
             <form id="analysis-form">
-                <div class="label-input">유튜브 비디오 URL 입력</div>
+                <!-- 라벨과 버튼을 같은 라인에 배치 -->
+                <div class="form-header">
+                    <div class="label-input">유튜브 비디오 URL 입력</div>
+                    <a href="dashboard.html" class="dashboard-button">
+                        <svg class="dashboard-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <polyline points="3 17 7 12 12 15 18 9 21 12" />
+                            <circle cx="3" cy="17" r="1" fill="white"/>
+                            <circle cx="7" cy="12" r="1" fill="white"/>
+                            <circle cx="12" cy="15" r="1" fill="white"/>
+                            <circle cx="18" cy="9" r="1" fill="white"/>
+                            <circle cx="21" cy="12" r="1" fill="white"/>
+                        </svg>
+                        주간 YouTube Trend 스냅샷
+                    </a>
+                </div>
                 <input type="text" id="videoUrl" name="videoUrl" required placeholder="YouTube 동영상 URL을 입력하세요">
                 <div class="input-example">예: https://www.youtube.com/watch?v=ZJzxje3rmnI</div>
                 
@@ -263,10 +305,6 @@
             <div id="result" class="result-message"></div>
             <div class="privacy-link">
                 <a href="https://taesung01.github.io/youtube-analysis-form/privacy-policy.md" target="_blank">개인정보 처리방침</a>
-            </div>
-            <!-- dashboard 링크 추가 -->
-            <div class="dashboard-link">
-                <a href="dashboard.html">SNS Dashboard</a>
             </div>
         </div>
     </div>
