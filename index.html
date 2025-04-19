@@ -72,7 +72,7 @@
             color: #333;
             margin-bottom: 12px;
             text-align: left;
-            flex: 1; /* flex를 사용해 라벨이 남은 공간을 차지하도록 */
+            flex: 1;
         }
         .input-example {
             font-size: 13px;
@@ -191,7 +191,7 @@
         .dashboard-button {
             width: 50%;
             padding: 8px;
-            background: linear-gradient(135deg, #6B7280, #4B5563);
+            background: linear-gradient(135deg, #D1D5DB, #9CA3AF); /* 연한 회색 그라디언트 */
             color: white;
             border: none;
             border-radius: 6px;
@@ -206,7 +206,7 @@
             text-decoration: none;
         }
         .dashboard-button:hover {
-            background: linear-gradient(135deg, #5B6170, #3B4553);
+            background: linear-gradient(135deg, #BFC5CF, #8A919E); /* 연한 호버 색상 */
             transform: translateY(-1px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
@@ -220,7 +220,6 @@
             margin-right: 6px;
             vertical-align: middle;
         }
-        /* 라벨과 버튼을 같은 라인에 배치하기 위한 flex 컨테이너 */
         .form-header {
             display: flex;
             align-items: center;
@@ -249,10 +248,9 @@
                 </div>
             </div>
             <form id="analysis-form">
-                <!-- 라벨과 버튼을 같은 라인에 배치 -->
                 <div class="form-header">
                     <div class="label-input">유튜브 비디오 URL 입력</div>
-                    <a href="dashboard.html" class="dashboard-button">
+                    <a href="dashboard.html" class="dashboard-button" target="_blank">
                         <svg class="dashboard-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                             <polyline points="3 17 7 12 12 15 18 9 21 12" />
                             <circle cx="3" cy="17" r="1" fill="white"/>
